@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+    
+    <!-- INTERFACE=== -->
+    <cc:interface>
+        <cc:attribute name="target" required="required" />
+        <cc:attribute name="years" type="java.util.List" required="true" />
+        
+    </cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+         
+        <p:overlayPanel for="#{cc.attrs.target}" id="MonthSelectOverlay" onHide="remove_ui_selected_class()"  style="width:250px;height:180px; padding:0px;" >
+                <div class="panel-bs-2 panel-info">
+                    <div class="panel-heading grey">
+                        <p:spacer height="1" width="65" />
+                        <p:selectOneMenu id="yearSelectMenu"  widgetVar="yearSelectMenuWidget" >
+                            <f:selectItems  value="#{cc.attrs.years}" var="year" itemLabel="#{year}" itemValue="#{year}" />
+                        </p:selectOneMenu>
+                    </div>
+                    <div class="panel-body text-center">
+                        <ol id="selectable-mpit">
+                            <li class="ui-state-default" id="month-item-1" value="1">Jan</li>
+                            <li class="ui-state-default" id="month-item-2" value="2">Feb</li>
+                            <li class="ui-state-default" id="month-item-3" value="3">Mar</li>
+                            <li class="ui-state-default" id="month-item-4" value="4">Apr</li>
+                            <li class="ui-state-default" id="month-item-5" value="5">May</li>
+                            <li class="ui-state-default" id="month-item-6" value="6">Jun</li>
+                            <li class="ui-state-default" id="month-item-7" value="7">Jul</li>
+                            <li class="ui-state-default" id="month-item-8" value="8">Aug</li>
+                            <li class="ui-state-default" id="month-item-9" value="9">Sep</li>
+                            <li class="ui-state-default" id="month-item-10" value="10">Oct</li>
+                            <li class="ui-state-default" id="month-item-11" value="11">Nov</li>
+                            <li class="ui-state-default" id="month-item-12" value="12">Dec</li>
+                        </ol>
+                    </div>
+                </div>
+                <div></div>
+                
+            </p:overlayPanel>
+    </cc:implementation>
+</html>

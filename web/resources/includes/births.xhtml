@@ -1,0 +1,174 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:month_select_composite_component="http://java.sun.com/jsf/composite/month_select_composite_component"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title></title>
+    </h:head>
+    <h:body style="">
+        <p:dialog closable="false" dynamic="true" id="birthsDialog" widgetVar="birthsDlg" modal="true" >
+            <h:form id="birthsForm">
+
+                <p:panel>
+                    <p:message for="birthsSearchButton" severity="info" />
+                    <p:message  for="birthEditButton" severity="info"   />
+                    <div class="row">
+                        <div class="columns small-3">
+                            <h:outputText value="#{mrmp.select} #{mrmp.month}" />
+                        </div>
+                        <div class="columns small-6">
+                            <p:inputText id="birthMonthSelectEntry"  value="" required="true" onmouseover="set_month_overlay_targetId('birthsForm:birthMonthSelectEntry')" />
+                        </div>
+                        <div class="columns small-3">
+                            <month_select_composite_component:month_select_cc years="#{birthsBean.msb.years}" target="#{p:component('birthMonthSelectEntry')}" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="columns small-3"></div>
+                        <div class="columns small-6"></div>
+                        <div class="columns small-3">
+                            <p:commandButton id="birthsSearchButton" process="@this" value="#{mrmp.search}" icon="ui-icon-search" actionListener="" update="" >
+                                <f:param name="cid" value="BBCID" />
+                                <f:param name="BSBID" value="#{p:component('birthsSearchButton')}" />
+
+                            </p:commandButton>
+                        </div>
+                    </div>
+
+                </p:panel>
+
+
+                <p:dataTable paginator="true" widgetVar="birthsTable" editable="false" rows="15"  rowsPerPageTemplate="5,10,15" 
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             value="#{birthsBean.births}" var="birth" id="birthsDataTable"  selectionMode="single" selection="#{medicalRecordManagerBean.birthForEdit}"  >
+
+                    <f:facet name="header">
+                        #{mrmp.appointments}
+                    </f:facet>
+                    <p:column  style="width: 4%" >
+                        <p:rowToggler id="birthsRowToggler" />
+                    </p:column>
+                    <p:column headerText="#{mrmp.mothers} #{mrmp.id}">
+                        <h:outputText value="#{birth.mother.id.ID}" />
+                    </p:column>
+
+
+
+                    <p:column headerText="#{mrmp.babys} #{mrmp.name}" >
+                        <h:outputText value="#{birth.babyName} #{birth.babySurname}" />
+                    </p:column>
+
+
+                    <p:column headerText="#{mrmp.babys} #{mrmp.sex}">
+                        <h:outputText value="#{birth.babySex}" />
+
+                        <p:column headerText="#{mrmp.mode} #{mrmp.of} #{mt.delivery}">
+                            <h:outputText value="#{birth.modeOfDelivery}" />
+                        </p:column> </p:column>
+                    <p:column headerText="#{mrmp.birth} #{mrmp.weightKG}" >
+                        <h:outputText value="#{birth.babyWeight}" />
+                    </p:column>
+                    <p:column headerText="#{mrmp.date} #{mrmp.of} #{mt.delivery}" filterBy="#{birth.birthDateString}" >
+                        <h:outputText value="#{birth.birthDateString}" >
+
+                        </h:outputText>
+                    </p:column>
+
+
+
+
+
+
+                    <p:rowExpansion >
+                        <div class="row">
+                            <div class="columns small-3">
+                                <h:outputText value="#{mrmp.time} #{pr.ofbirth}" />
+                            </div>
+                            <div class="columns small-3">
+                                <h:outputText value="#{birth.birthTimeString}" />
+                            </div>
+                            <div class="columns small-3">
+                                <h:outputText value="#{mt.apgarscore} #{mrmp.at} #{mrmp.onemin}"/>
+                            </div>
+                            <div class="columns small-3">
+                                <h:outputText value="#{birth.apgarAtOne}" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="columns small-3">
+                                <h:outputText value="#{mt.apgarscore} #{mrmp.at} #{mrmp.fivemin}" />
+                            </div>
+                            <div class="columns small-3">
+                                <h:outputText value="#{birth.apgarAtFive}" />
+                            </div>
+                            <div class="columns small-3">
+                                <h:outputText value="#{mt.apgarscore} #{mrmp.at} #{mrmp.tenmin}" />
+                            </div>
+                            <div class="columns small-3">
+                                <h:outputText value="#{birth.apgarAtTen}" />
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="columns small-3">
+                                <h:outputText value="#{mrmp.mothers} #{mrmp.name}" />
+                            </div>
+                            <div class="columns small-3">
+                                <h:outputText value="#{birth.mother.name} #{birth.mother.surname}" />
+                            </div>
+                            <div class="columns small-3">
+                                <h:outputText value="#{mrmp.deliveredby}"/>
+                            </div>
+                            <div class="columns small-3">
+                                <h:outputText value="#{birth.delieverdBy}" />
+                            </div>
+                        </div>
+
+
+
+
+                    </p:rowExpansion>
+                    <f:facet name="footer">
+                        <div class="row">
+                            <div class="columns small-5">
+
+                            </div>
+                            <div class="columns small-2">
+                                <p:commandButton value="#{mrmp.edit}"  id="birthEditButton" actionListener="#{birthsBean.births_BirthsEditBirthButtonClickedListener()}" icon="ui-icon-pencil" process="@this,birthsTable" >
+                                    <f:param name="cid" value="BBCID" />
+                                    <f:param name="BEBID" value="#{p:component('birthEditButton')}" />
+                                </p:commandButton>
+                            </div>
+                            <div class="columns small-5">
+
+                            </div>
+                        </div>
+                    </f:facet>
+                </p:dataTable> 
+
+                <div class="row">
+                    <div class="columns small-3">
+
+                    </div>
+                    <div class="columns small-3">
+
+                    </div>
+                    <div class="columns small-3">
+
+                    </div>
+                    <div class="columns small-3">
+                        <p:commandButton value="#{mrmp.cancel}" actionListener="#{birthsBean.births_BirthsCancelButtonClickedListener()}" oncomplete="birthsDlg.hide()" >
+                            <f:param name="cid" value="BBCID" />
+                        </p:commandButton>
+                    </div>
+                </div>
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>
+

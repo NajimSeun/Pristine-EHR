@@ -1,0 +1,227 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    
+    <h:body style="">
+        <p:dialog id="appointmentViewer"    closable="true" resizable="false" dynamic="true"   widgetVar="appViewerDialog" height="450" width="680" onShow="initSlidr()"  draggable="false" modal="true" >
+            <h:form>
+                <div style="display: block" id="slidr_appointment">
+                    <div data-slidr="appointment_Selection" style="width: auto">
+
+                        <p:panelGrid >
+                            <f:event type="preRenderComponent"  listener="#{appointmentViewerBean.initConversation()}" />
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column colspan="2">
+                                        #{mrmp.appointments}
+
+                                    </p:column>
+                                </p:row>
+                            </f:facet>
+
+                            <p:row>
+                                <p:column>
+                                    <p:wizard id="appViewerWiz" style="width:100%;" showNavBar="false" showStepStatus="false"  step="#{appointmentViewerBean.deptBean.currentStep}" >
+                                        <p:tab id="appViewerDeptTab" title="#{mrmp.department} #{mrmp.s}">
+                                            <p:panelGrid  >
+                                                <p:row>
+                                                    <p:column colspan="2">
+
+                                                        <p:treeTable        id="departmentTreeTableAppViewer" value="#{appointmentViewerBean.rlhb.deptRoot}" style="width: 600px;" scrollable="true" scrollHeight="250"
+                                                                            selectionMode="single" selection="#{appointmentViewerBean.deptBean.department_SelectedTreeNode}" var="dept" >
+
+                                                            <f:facet name="header">
+                                                                #{mrmp.department}#{mrmp.s}
+                                                            </f:facet>
+                                                            <p:column headerText="#{mrmp.name}" width="170" >
+
+                                                                <h:outputText value="#{dept.name}" />  
+                                                            </p:column>
+
+                                                            <p:column headerText="#{mrmp.schedule}" width="170" >
+
+                                                                <h:outputText value="#{dept.schedule}" />  
+                                                            </p:column>
+
+                                                            <p:column headerText="#{mrmp.personnels}" width="170">
+
+                                                                <h:outputText value="#{dept.personnel}" />  
+                                                            </p:column>
+                                                        </p:treeTable>
+
+                                                    </p:column>
+                                                </p:row>
+                                            </p:panelGrid>
+
+                                            <div class="row">
+                                                <div class="small-9columns">
+                                                    <h:outputText value="" />
+                                                </div>
+                                                <div class="small-1 columns"></div>
+                                                <div class="small-2 columns" >
+                                                    <div class="centered text-right">
+                                                        <p:commandButton update="appViewerWiz"   icon="ui-icon-arrow-1-e"  process="@this,departmentTreeTableAppViewer" actionListener="#{appointmentViewerBean.deptBean.department_DepartmentSelectButtonClickedListener}"  id="nextDateButtonAppView"  value="#{mrmp.next}" >
+                                                            <f:param name="cid" value="APPVIEWCID" />
+                                                        </p:commandButton></div>
+                                                </div>
+                                            </div>
+
+
+                                        </p:tab>
+
+
+                                        <p:tab id="appViewerDateTab" title="#{mrmp.appointment} #{mrmp.date}" >
+                                            <p:calendar mode="inline" size="480"   styleClass="appViewResize" id="appViewCalendar"     pages="3"     disabledWeekends="true"  title="#{mrmp.select} #{mrmp.appointment} #{mrmp.date}" value="#{appointmentViewerBean.deptBean.department_SelectedDate}" showWeek="true" selectOtherMonths="true" >
+
+                                            </p:calendar>
+
+                                            <div class="row">
+                                                <div class="columns small-1 centered">
+                                                    <p:commandButton process="@this" update="appViewerWiz" icon="ui-icon-arrow-1-w"  value="#{mrmp.prev}"  id="prevDepartmentButtonAppView" actionListener="#{appointmentViewerBean.deptBean.department_DatePrevButtonClickedListener()}"  >
+                                                        <f:param name="cid" value="APPVIEWCID" />
+                                                    </p:commandButton>
+                                                </div>
+
+                                                <div class="columns small-9 ">
+
+                                                </div >
+
+                                                <div class="columns small-2 centered text-right">
+                                                    <p:commandButton value="#{mrmp.next}" process="@this,appViewerWiz" icon="ui-icon-arrow-1-e" update="appViewerWiz" id="nextSummaryButtonAppView" actionListener="#{appointmentViewerBean.deptBean.department_DateSelectButtonClickedListener}" >
+                                                        <f:param name="cid" value="APPVIEWCID" />
+                                                    </p:commandButton>
+
+
+                                                </div>
+                                            </div>
+                                        </p:tab>
+
+                                        <p:tab id="appViewerSummaryTab" title="#{mrmp.appointment} #{mrmp.summary}"  >
+                                            <p:panel style="width:600px; height: 300px;">
+
+
+                                                <div class="row">
+                                                    <div class=" columns small-6  text-center confirm confirm-font  ">
+                                                        <h:outputText  value="#{mrmp.department}" />
+                                                    </div>
+                                                    <div class=" columns small-5  text-left confirm confirm-font ">
+                                                        <h:outputText id="deptoutTextAppView" value="#{appointmentViewerBean.deptBean.department_SelectedDepartment}" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                     
+                                                    <div class=" columns small-6 text-center confirm confirm-font ">
+                                                        <h:outputText  value="#{mrmp.unit}" />
+                                                    </div>                                                     
+                                                    <div class=" columns small-5 text-left confirm confirm-font">
+                                                        <h:outputText id="unitOutputTextAppView" value="#{appointmentViewerBean.deptBean.department_SelectedUnit}" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                     
+
+                                                    <div class=" columns small-6 text-center confirm confirm-font ">
+                                                        <h:outputText  value="#{mrmp.date}" />
+                                                    </div>
+                                                    
+
+                                                     
+                                                   <div class=" columns small-5 text-left confirm confirm-font">
+                                                        <h:outputText  id="dateOutputTextAppView" value="#{appointmentViewerBean.deptBean.department_SelectedDate   }" >
+                                                            <f:convertDateTime pattern="EEE, dd MMM, yyyy"  />
+                                                        </h:outputText>
+                                                    </div>
+                                                </div>
+
+
+
+
+                                                <div class="row">
+                                                    <div class="columns small-3 confirm confirm-font">
+                                                        <p:commandButton value="#{mrmp.reset}" icon="ui-icon-refresh" actionListener="#{appointmentViewerBean.deptBean.department_Reset}" process="@this" update="appViewerWiz"  />
+                                                    </div>
+                                                    <div class="columns small-6">
+
+                                                    </div>
+                                                    <div class="columns small-3 text-right confirm confirm-font">
+                                                        <p:commandButton value="#{mrmp.view}" actionListener="#{appointmentViewerBean.appointmentViewer_AppointmentViewShowAppButtonClickedListener()}" icon="ui-icon-search"    process="@this"  update="appviewerDT">
+                                                            <f:param name="cid" value="APPVIEWCID" />
+                                                        </p:commandButton>
+                                                    </div>
+                                                </div>
+                                            </p:panel>
+                                        </p:tab>
+                                    </p:wizard>
+                                </p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </div>
+                    <div data-slidr="appointment_Display">
+                        <p:dataTable  value="#{appointmentViewerBean.appointments}" widgetVar="appViewerDlg" selection="single" var="app"  paginator="true" rows="10"  
+                                      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                      rowsPerPageTemplate="5,10,15"  id="appviewerDT" >
+                            <f:facet name="header">
+                                #{mrmp.appointments}
+                                <p:outputPanel>  
+                                    <h:outputText value="Search all fields:" />  
+                                    <p:inputText id="AppviewDlgGF" onkeyup="appViewerDT.filter()" style="width:150px" />  
+                                </p:outputPanel>  
+                            </f:facet>
+                            <p:column headerText="">
+                                <h:graphicImage  library="images" name="open_px.png" />
+                            </p:column>
+                            <p:column headerText="#{mrmp.id}" >
+                                <h:outputText value="#{app.patient.id.ID}" />
+                            </p:column>
+
+                            <p:column headerText="#{mrmp.name}">
+                                <h:outputText value="#{app.patient.name}" />
+                            </p:column>
+
+                            <p:column headerText="#{mrmp.middleName}">
+                                <h:outputText value="#{app.patient.middleName}" />
+                            </p:column>
+                            <p:column headerText="#{mrmp.surname}">
+                                <h:outputText value="#{app.patient.surname}" />
+                            </p:column>
+                            <p:column headerText="#{mrmp.age}" >
+                                <h:outputText value="#{app.patient.age}" />
+                            </p:column>
+                            <p:column headerText="#{mrmp.remark}" >
+                                <h:outputText value="#{app.remark}" />
+                            </p:column>
+                        </p:dataTable>
+
+                    </div>
+                </div>
+
+
+
+            </h:form>
+        </p:dialog>
+
+
+
+
+    </h:body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

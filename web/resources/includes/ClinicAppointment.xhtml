@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:px="http://primefaces.org/ui/extensions">
+    <h:head>
+
+
+
+    </h:head>
+    <h:body style="">
+        <ui:composition>
+            <p:dialog id="clinicAppointmentDialog" closable="false" draggable="false" dynamic="true" 
+                      header="#{mrmp.clinic} #{mrmp.appointments}" widgetVar="clinicAppDlg" modal="true"     >
+                <h:form id="clinicAppointmentsForm">
+                    <div class="row">
+                        <div class="column large-2">
+                            <p:menu id="clinicAppointmentsMenu" >
+                                <p:submenu icon="" label="#{mrmp.appointment}">
+                                    <p:menuitem actionListener="#{medicalRecordManagerBean.clinicAppointment_ClinicAppointmentAllButtonClickedListener()}" ajax="true" icon="ui-icon-home" value="#{mrmp.all}" process="@this" update="clinicAppointmentDataTable,openClinicAppMenuitem" />
+                                    <p:menuitem actionListener="#{medicalRecordManagerBean.clinicAppointment_ClinicAppointmentOpenedButtonListener()}" ajax="true"  icon="ui-icon-unlocked" value="#{mrmp.opened}" process="@this" update="clinicAppointmentDataTable,openClinicAppMenuitem"  />
+                                    <p:menuitem actionListener="#{medicalRecordManagerBean.clinicAppointment_ClinicAppointmentEnQueuedButtonListener()}" ajax="true" value="#{mrmp.queued}" icon="ui-icon-calculator" process="@this" update="clinicAppointmentDataTable,openClinicAppMenuitem" />
+                                    <p:menuitem actionListener="#{medicalRecordManagerBean.clinicAppointment_ClinicAppointmentAttendedButtonListener()}" ajax="true" value="#{mrmp.attended}" icon="ui-icon-bookmark" process="@this" update="clinicAppointmentDataTable,openClinicAppMenuitem" />
+                                </p:submenu>
+                                <p:submenu icon="ui-icon-wrench" label="#{mrmp.task}" >
+                                    <p:menuitem id="openClinicAppMenuitem" disabled="#{medicalRecordManagerBean.clinicAppointment_openPatientButtonEnabled}" ajax="true" actionListener="#{medicalRecordManagerBean.clinicAppointment_ClinicAppointmentOpenButtonClickedListener()}" icon="ui-icon-folder-open" value="#{mrmp.open}" process="@this" update="clinicAppointmentDataTable" /> 
+                                    <p:menuitem id="refreshClinicAppMenuItem" actionListener="#{medicalRecordManagerBean.clinicAppointment_clinicAppointmentReloadAppointmen()}" ajax="true" icon="ui-icon-refresh" process="@this"/>
+                                </p:submenu>
+                            </p:menu>
+                        </div>
+                        <div class="column large-10">
+
+                            <p:dataTable paginator="true" widgetVar="clinicAppointmentsTable" editable="false" rows="20"  rowsPerPageTemplate="10,20,30" 
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         id="clinicAppointmentDataTable" value="#{medicalRecordManagerBean.clinicAppointment_Appointments}" selectionMode="#{medicalRecordManagerBean.clinicAppointment_SelectionMode}" selection="#{medicalRecordManagerBean.clinicAppointment_SelectedAppointments}"  var="app" >
+
+                                <f:facet name="header">
+                                    #{medicalRecordManagerBean.loggedIntoDept} #{medicalRecordManagerBean.loggedIntoUnit}-#{medicalRecordManagerBean.todayDateString}
+                                </f:facet>
+
+
+                                <p:column headerText="#{mrmp.id}" id="idColumn" filterBy="#{app.patient.id.ID}"  >
+                                    <h:outputText value="#{app.patient.id.ID}" />
+                                </p:column>
+
+                                <p:column headerText="#{mrmp.name}" filterBy="#{app.patient.name}">
+                                    <h:outputText value="#{app.patient.name}" />
+                                </p:column>
+                                <p:column headerText="#{mrmp.middleName}" filterBy="#{app.patient.middleName}">
+                                    <h:outputText value="#{app.patient.middleName}" />
+                                </p:column>
+                                <p:column headerText="#{mrmp.surname}" filterBy="#{app.patient.surname}">
+                                    <h:outputText value="#{app.patient.surname}"  />
+                                </p:column>
+                                <p:column headerText="#{mrmp.age}" filterBy="#{app.patient.age}" >
+                                    <h:outputText value="#{app.patient.age}" />
+                                </p:column>
+                                <p:column headerText="#{mrmp.sex}" filterBy="#{app.patient.pinfo.sex}" >
+                                    <h:outputText  value="#{app.patient.pinfo.sex}" />
+                                </p:column>
+                                
+                                <p:column headerText="#{mrmp.status}" filterBy="#{app.openStatus}" filterOptions="#{medicalRecordManagerBean.clinicAppointment_FilterOptions}" filterMatchMode="exact" >
+                                    <h:graphicImage library="images" name="#{app.openStatus}" />
+                                </p:column>
+                                <f:facet name="footer">
+                                    #{mrmp.clinic} #{mrmp.appointments}
+                                </f:facet>
+                            </p:dataTable> 
+                        </div>
+                    </div>
+
+
+                    <p:panelGrid columns="7" >
+
+
+
+
+
+                        <p:outputPanel>
+                            <p:commandButton value="#{mrmp.open}" id="openAppointmentButton" actionListener="#{medicalRecordManagerBean.appointment_OpenAppointmentsButtonClickedListener}" disabled="#{medicalRecordManagerBean.appointment_OpenButtonDisabled}" />
+                        </p:outputPanel>
+                        <p:commandButton value="#{mrmp.close}" actionListener="#{medicalRecordManagerBean.appointment_CloseAppointmentsButtonClickedListener}" onclick="appointDlg.close()"  />
+                    </p:panelGrid>
+                    <px:switch value="#{medicalRecordManagerBean.appointmentOpenStatus}" >
+                        <px:defaultCase>
+
+                        </px:defaultCase>
+                        <px:case value="Error" >
+                            <p:dialog  closable="false" widgetVar="errorDialog"  visible="#{medicalRecordManagerBean.appointmentErrorDialogRendered}" rendered="#{medicalRecordManagerBean.appointmentErrorDialogRendered}" id="appointmentErrorDialog" modal="true" width="200" height="300" dynamic="true" header="#{mrmp.error}">
+                                <p:dataGrid columns="2">
+                                    <p:row>
+                                        <p:column>
+                                            <p:message  id="errorMessage" for="openAppointmentButton" showSummary="true" />
+                                        </p:column>
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <p:commandButton id="appointmentErrorEditSelection" value="#{mrmp.edit} #{mrmp.selection}" actionListener="#{medicalRecordManagerBean.appointment_ErrorDialogCloseButtonClicked}" onclick="errorDialog.close()"  />
+                                        </p:column>
+                                        <p:column>
+                                            <p:commandButton id="appointmentErrorCloseSelection" value="#{mrmp.close}" actionListener="#{medicalRecordManagerBean.appointment_ErrorDialogEditButtonClicked}"  onclick="appointDlg.close()" oncomplete="errorDialog.close()" />
+                                        </p:column>
+
+                                    </p:row>
+
+                                </p:dataGrid>
+                            </p:dialog>
+                        </px:case>
+                        <px:case value="Warning">
+                            <p:dialog  widgetVar="warningDialog" closable="true" visible="#{medicalRecordManagerBean.appointmentWaringDialogRendered}" rendered="#{medicalRecordManagerBean.appointmentWaringDialogRendered}" id="appointmentWarningDialog" modal="true" width="200" height="300" dynamic="true" header="#{mrmp.warning}">
+                                <p:dataGrid columns="1">
+                                    <p:message  id="warningMessage" for="openAppointmentButton" showSummary="true" />
+                                    <p:commandButton id="appointmentWarningOkDialog" actionListener="" onclick="appointDlg.close()" oncomplete="warningDialog.close()" />
+                                </p:dataGrid>
+                            </p:dialog>
+                        </px:case>
+                        <px:case value="Success">
+                            <p:dialog  widgetVar="successDialog"  closable="true" visible="#{medicalRecordManagerBean.appointmentSuccessDialogRendered}" rendered="#{medicalRecordManagerBean.appointmentSuccessDialogRendered}" id="appointmentOpenSuccessDialog" modal="true" width="200" height="300" dynamic="true" header="#{mrmp.success}">
+                                <p:dataGrid columns="1">
+                                    <p:message  id="successMessage" for="openAppointmentButton" showSummary="true" />
+                                    <p:commandButton id="appointmentSuccessOkDialog" oncomplete="successDialog.close()" onclick="appointDlg.close()" actionListener=""  />
+                                </p:dataGrid>
+                            </p:dialog>
+                        </px:case>
+                    </px:switch>
+                </h:form> 
+            </p:dialog>
+        </ui:composition>
+    </h:body>
+</html>
+

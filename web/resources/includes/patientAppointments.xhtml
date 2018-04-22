@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:department_composite_component="http://xmlns.jcp.org/jsf/composite/department_composite_component">
+    <h:head>
+        <title>Appointments</title>
+    </h:head>
+    <h:body>
+        <p:dialog widgetVar="patientAppointmentDlg"  modal="true" closable="false" id="patientAppDlg" dynamic="true" header="#{mrmp.patient} #{mrmp.appointment}#{mrmp.s}"  >
+            <h:form id="patientAppointmentForm">
+
+                <p:panel header="#{mrmp.appointments} #{mrmp.for}- #{mrmp.hospital} #{mrmp.number}:#{patientAppointmentBean.mrmb.selectedPatient.id.ID} - #{mrmp.name}:#{patientAppointmentBean.mrmb.selectedPatient.name} #{patientAppointmentBean.mrmb.selectedPatient.surname}" >
+                    <f:event type="preRenderComponent" listener="#{patientAppointmentBean.init()}" />
+                    
+                    <div class="row">
+                        <div class="column small-3">
+                            <h:outputText  value="#{mrmp.sex}"</div>
+                        <div class="column small-3">
+                            <h:outputText value="#{patientAppointmentBean.mrmb.selectedPatient.pinfo.sex}" /></div>
+                        <div class="column small-3">
+                            <h:outputText value="#{mrmp.age}" />
+                        </div>
+                        <div class="column small-3">
+                            <h:outputText value="#{patientAppointmentBean.mrmb.selectedPatient.age}" />
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="column small-3">
+                            <h:outputText value="#{mrmp.unit}" />
+                        </div>
+                        <div class="column small-6">
+                            <h:outputText value="#{patientAppointmentBean.selectedDepartment} #{patientAppointmentBean.selectedUnit}" id="patientAppDeptOutputText" />
+                        </div>
+                        <div class="column small-3">
+                            <p:commandButton id="patientAppDeptSelectButton" value="#{mrmp.select} #{mrmp.department}" process="@this"  update="patientAppDeptOutputText" >
+                                <f:param name="cid" value="PACID" />
+                            </p:commandButton>
+                        </div>
+
+                    </div>
+
+                    
+
+                    <f:facet name="footer">
+                        <div class="row">
+                            
+                            <div class="column small-9">
+
+                            </div>
+                            <div class="column small-3">
+                                <p:commandButton value="#{mrmp.show} #{mrmp.appointments}" process="@this" update="currentAppDataListPtApp,prevAppDatatListPtApp" id="patientAppShowAppButton" icon="ui-icon-search" >
+                                    <f:param name="cid" value=""/>
+                                </p:commandButton>
+                            </div>
+                        </div>
+
+                    </f:facet>
+                </p:panel>
+
+                
+                <div class="row">
+                        <div class="small-6 column">
+                            <p:dataList   value="#{patientAppointmentBean.currentAppointments}" var="cApp" 
+                                           paginator="true" rows="5"   paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink} {RowsPerPageDropdown}"  
+                                           rowsPerPageTemplate="5,10,15" id="currentAppDataListPtApp">
+                                #{mrmp.scheduled} #{mrmp.appointments}
+                                <p:commandButton value="#{mrmp.edit}" icon="ui-icon-search"   oncomplete="ptAppEditDlg.show()" >
+                                    <f:setPropertyActionListener target="#{patientAppointmentBean.appForEdit}" value="#{cApp}"
+                                </p:commandButton>
+                                <h:outputText value="#{cApp.dateOfAppointment}" style="margin-left:10px" />
+                                <h:outputText value="#{cApp.department}" style="margin-left:10px" />
+                                <h:outputText value="#{cApp.unit}" style="margin-left:10px" />
+                                
+                            </p:dataList>
+                        </div>
+                        
+                        <div>
+                            <div class="small-6 column">
+                                <p:dataList value="#{patientAppointmentBean.previousAppointments}"  id="prevAppDatatListPtApp"  var="pApp"
+                                         paginator="true" rows="5"   paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink} {RowsPerPageDropdown}"  
+                                              rowsPerPageTemplate="5,10,15">
+                                    <f:facet name="header">
+                                        #{mrmp.prev} #{mrmp.appointments}
+                                    </f:facet>
+
+                                    <h:outputText value="#{pApp.dateOfAppointment}" >
+                                        <f:convertDateTime pattern="EEE, MMM d, ''yy" />
+                                    </h:outputText>
+                                    <h:outputText value="#{pApp.department }" />
+                                    <h:outputText value="#{pApp.unit}" />
+                                    <h:graphicImage library="images" name="#{pApp.remark}#{mrmp.app}#{mrmp.png}" />
+                                    <f:facet name="footer">
+                                        #{mrmp.appointments}
+                                    </f:facet>
+                                </p:dataList>
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="row">
+                    <div class="column small-3"></div>
+                    <div class="column small-3"></div>
+                    <div class="column small-3"></div>
+                    <div class="column small-3">
+
+                    </div>
+                    <department_composite_component:department_select_cc deptSelectEventListener="#{patientAppointmentBean.patientAppointment_PatientAppointmentDepartmentNodeSelectListener}" departmentSelectTarget="#{p:component('patientAppDeptSelectButton')}" departmentsRootTreeNode="#{patientAppointmentBean.mrmb.departmentTreeNodeNoClinic}" selectedDepartmentTreeNode="#{patientAppointmentBean.selectedDepartmentNode}" />
+
+            </h:form>
+        </p:dialog>
+
+    </h:body>
+</html>
+
+
+

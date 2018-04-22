@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Compose</title>
+    </h:head>
+    <h:body>
+       <p:dialog widgetVar="composeDlg" modal="true" header="New Email" width="530" showEffect="fade" hideEffect="fade">
+
+           
+                <h:form>
+
+                    <h:panelGrid columns="2" cellspacing="5">
+                        <h:outputLabel for="to" value="To: " />
+                        <p:inputText id="to"/>
+
+                        <h:outputLabel for="cc" value="CC: " />
+                        <p:inputText id="cc"/>
+
+                        <h:outputLabel for="subject" value="To: " />
+                        <p:inputText id="subject" size="50"/>
+                    </h:panelGrid>
+
+                    <p:separator />
+
+                    <p:editor widgetVar="editor" />
+
+                    <p:separator />
+
+                    <p:commandButton value="Send" onclick="composeDlg.hide()"  process="@this"/>
+                    <p:commandButton value="Cancel" onclick="composeDlg.hide()" type="button"/>
+
+                </h:form>
+
+            </p:dialog>
+    </h:body>
+</html>
+

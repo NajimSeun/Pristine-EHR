@@ -1,0 +1,4 @@
+#selectable-mpit .ui-selecting-mpit { background: #d3d3d3; }
+#selectable-mpit .ui-selected-mpit { background: #29bae9; color: white; }
+#selectable-mpit { list-style-type: none; margin: 0; padding: 0; width: 250px; }
+#selectable-mpit li { margin: 0px; padding: 1px; float: left; width: 50px; height: 30px; font-size: 1em; text-align: center; }

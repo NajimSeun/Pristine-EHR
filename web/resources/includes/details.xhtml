@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body style="">
+        <h:form>
+
+
+            
+            <p:dialog widgetVar="detailDlg" modal="true" showEffect="slide"  closable="true" dynamic="true" resizable="false"  onShow="searchDialogDetailsRemoteCommand([{name:'cid',value:'SDCID'}])"    >
+
+                <p:panelGrid  columns="2" >
+                    <f:facet name="header" >
+                        #{mrmp.patient} #{mrmp.details}
+                    </f:facet>
+                    <p:graphicImage name="new_px_1.png"  library="images" />
+                    <p:spacer height="0"  width="0"/>
+                    <p:panelGrid columns="2" id="searchDialogDetailPanel1">
+                        <p:spacer height="15"  width="0"/>
+                        <p:spacer height="15"  width="0"/>
+                        <h:outputText  value="#{mrmp.id}"  />
+                        <h:outputText value="#{searchBean.search_SelectedPatient.id.ID}" id="idDetail"  />
+
+
+
+                        <h:outputText  value="#{mrmp.name}"  />
+                        <h:outputText value="#{searchBean.search_SelectedPatient.name}" id="nameInputDetail"  />
+
+
+                        <h:outputText   value="#{mrmp.middleName}" />
+                        <h:outputText value="#{searchBean.search_SelectedPatient.middleName}" id="middlenameDetail" />
+
+                        <h:outputText  value="#{mrmp.surname}"  />
+                        <h:outputText value="#{searchBean.search_SelectedPatient.surname}" id="surnameDetail"  />
+
+                        <h:outputText  value="#{mrmp.sex}" />
+                        <h:outputText value="#{searchBean.search_SelectedPatient.pinfo.sex}" id="sexDetail" />
+                    </p:panelGrid>
+
+                    <p:panelGrid columns="2" id="searchDialogDetailPanel2">
+                        <h:outputText  value="#{mrmp.age}" />
+                        <h:outputText value="#{searchBean.search_SelectedPatient.age}" id="ageDetail" />
+
+                        <h:outputText  value="#{mrmp.occupation}" />
+                        <h:outputText value="#{searchBean.search_SelectedPatient.cinfo.address}" id="addDetail" />
+
+                        <h:outputText  value="#{pr.state}" />
+                        <h:outputText value="#{searchBean.search_SelectedPatient.pinfo.stateOfOrigin}" id="stateDetail" />
+
+                        <h:outputText  value="#{pr.localgovernment}" />
+                        <h:outputText value="#{searchBean.search_SelectedPatient.pinfo.localGovArea}" id="locgovDetail" />
+
+
+
+                    </p:panelGrid>
+
+                    <f:facet name="footer">
+                        <p:commandButton actionListener="#{searchBean.search_OpenPatientSearch()}" value="#{mrmp.open}"  />
+                        <p:commandButton  value="#{mrmp.close}"  onclick="detailDlg.close()"/>
+                    </f:facet>
+                </p:panelGrid>
+
+            </p:dialog>
+            <p:remoteCommand  actionListener="#{searchBean.isnull
+}" id="searchDialogDetailsRemoteCommand" name="searchDialogDetailsRemoteCommand" update="searchDialogDetailPanel1 searchDialogDetailPanel2" >
+
+            </p:remoteCommand>
+        </h:form>
+    </h:body>
+</html>
+

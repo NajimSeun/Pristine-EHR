@@ -1,0 +1,226 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      >
+
+    
+    <h:body style="">
+
+        <ui:composition>
+            <p:dialog closable="false" modal="true" header="#{mrmp.schedule} #{mrmp.appointment}" dynamic="true"  draggable="false"  hideEffect="fold" resizable="false" widgetVar="dlgSchAppoint"  minimizable="false" width="450" height="350" minHeight="300"   >
+
+                <h:form>
+                    <p:panelGrid   >
+                        <f:event type="preRenderComponent" listener="#{appScheduleBean.initConversation()}" />
+
+                        <p:row>
+                            <p:column colspan="3">
+                                <p:messages   id="scheduleMsg" />
+
+
+                            </p:column>
+                        </p:row>
+
+                        <p:row>
+                            <p:column colspan="3" >
+                                <p:wizard id="scheduleAppointmentWizard"   showStepStatus="false" showNavBar="false" widgetVar="scheduleApphWiz" style="width: 100%" step="#{appScheduleBean.deptBean.currentStep}"  >
+
+
+                                    <p:tab  title="#{mrmp.department}#{mrmp.s}"  id="scheduleAppDeptTab"   >
+
+                                        <p:panelGrid  >
+                                            <p:row>
+                                                <p:column colspan="2">
+                                                    <p:treeTable  id="departmentTreeTable" value="#{appScheduleBean.rlhc.deptRoot}" 
+                                                                  selectionMode="single"  style="width: 410px;" selection="#{appScheduleBean.deptBean.department_SelectedTreeNode}" var="dept" >
+                                                        <f:facet name="header">
+                                                            #{mrmp.department}
+                                                        </f:facet>
+
+                                                        <p:column >
+                                                            <f:facet name="header">  
+                                                                #{mrmp.name}
+                                                            </f:facet>  
+                                                            <h:outputText value="#{dept.name}" />  
+                                                        </p:column>
+
+                                                        <p:column >
+                                                            <f:facet name="header">  
+                                                                #{mrmp.schedule}
+                                                            </f:facet>  
+                                                            <h:outputText value="#{dept.schedule}" />  
+                                                        </p:column>
+
+                                                        <p:column >
+                                                            <f:facet name="header">  
+                                                                #{mrmp.personnel}#{mrmp.s}
+                                                            </f:facet>  
+                                                            <h:outputText value="#{dept.personnel}" />  
+                                                        </p:column>
+                                                    </p:treeTable>
+                                                </p:column>
+                                            </p:row>
+                                            <p:row>
+                                                <p:column colspan="2" >
+                                                    <p:spacer width="350" height="1" />
+
+                                                    <p:commandButton id="calendarNextButtonSchApp" process="@this,departmentTreeTable"  update="scheduleAppointmentWizard" 
+                                                                     actionListener="#{appScheduleBean.deptBean.department_DepartmentSelectButtonClickedListener}" value="#{mrmp.next}"  >
+                                                        <f:param name="cid" value="SACID" /> 
+                                                    </p:commandButton>
+                                                </p:column>
+                                            </p:row>
+                                        </p:panelGrid>
+                                    </p:tab>
+
+
+                                    <p:tab  title="#{mrmp.appointment} #{mrmp.date}"  id="scheduleAppDateTab" >
+                                        <p:panelGrid >
+                                            <p:row>
+                                                <p:column  colspan="2" >
+                                                    <p:calendar mode="inline"  value="#{appScheduleBean.deptBean.department_SelectedDate}"  id="calendarInputSchApp" selectOtherMonths="true" showOtherMonths="true"  pages="2"   size="420"  mindate="#{appScheduleBean.minDate}" maxdate="#{appScheduleBean.maxDate}" showWeek="true" />
+                                                </p:column>
+                                            </p:row>
+                                            <p:row>
+                                                <p:column colspan="2">
+
+                                                    <p:commandButton id="deptPrevButtonSchApp" value="#{mrmp.previous}" 
+                                                                     actionListener="#{appScheduleBean.deptBean.department_DatePrevButtonClickedListener}" update="scheduleAppointmentWizard"   >
+                                                        <f:param name="cid" value="SACID" />
+                                                    </p:commandButton>
+                                                    <p:spacer height="1" width="300" />
+                                                    <p:commandButton value="#{mrmp.next}" id="summaryNextButtonSchApp" process="@this,calendarInputSchApp" update="scheduleAppointmentWizard" actionListener="#{appScheduleBean.deptBean.department_DateSelectButtonClickedListener}" >
+                                                        <f:param name="cid" value="SACID" />
+                                                    </p:commandButton>
+                                                </p:column>
+                                            </p:row>
+                                        </p:panelGrid>
+                                    </p:tab>
+
+                                    <p:tab  id="scheduleAppSummaryTab" title="#{mrmp.appointment} #{mrmp.summary}" >
+
+                                        <p:panel>
+                                        <p:panelGrid  columns="3" >
+                                            
+                                            <p:spacer width="90" height="1" />
+                                                <p:panelGrid  >
+
+                                                    <p:row>
+                                                        <p:column >
+                                                            <h:outputText value="#{mrmp.name}"  />
+                                                        </p:column>
+
+                                                        <p:column>
+                                                            <h:outputText id="nameOutputTextSchAp" styleClass="confirm" value="#{appScheduleBean.mrmb.selectedPatient.surname}" />
+                                                        </p:column>
+                                                    </p:row>
+
+                                                    <p:row>
+                                                        <p:column >
+                                                            <h:outputText value="#{mrmp.surname}"  />
+                                                        </p:column>
+
+                                                        <p:column>
+                                                            <h:outputText id="surnameOutputTextSchAp" styleClass="confirm" value="#{appScheduleBean.mrmb.selectedPatient.name}" />
+                                                        </p:column>
+                                                    </p:row>
+
+                                                    <p:row>
+                                                        <p:column >
+                                                            <h:outputText value="#{mrmp.fromTd}"  />
+                                                        </p:column>
+                                                        
+                                                        <p:column>
+                                                            <h:outputText id="fromTdOutputTextSchAp" styleClass="confirm" value="#{appScheduleBean.deptBean.appFromTd}" />
+                                                        </p:column>
+                                                    </p:row>
+
+                                                    <p:row>
+                                                        <p:column >
+                                                            <h:outputText  value="#{mrmp.date}" />
+                                                        </p:column>
+
+                                                        <p:column>
+                                                            <h:outputText id="appDateOutputTextSchApp" styleClass="confirm" value="#{appScheduleBean.deptBean.department_SelectedDate}" >
+                                                                <f:convertDateTime  pattern="EEE, dd MMM, yyyy" />
+                                                            </h:outputText>
+                                                        </p:column>
+                                                    </p:row>
+
+                                                    <p:row>
+                                                        <p:column >
+                                                            <h:outputText value="#{mrmp.department}" />
+                                                        </p:column>
+
+                                                        <p:column>
+                                                            <h:outputText id="deptOutputTextSchApp" styleClass="confirm" value="#{appScheduleBean.deptBean.department_SelectedDepartment}" />
+                                                        </p:column>
+                                                    </p:row>
+
+
+                                                    <p:row>
+                                                        <p:column >
+                                                            <h:outputText value="#{mrmp.unit}" />
+                                                        </p:column>
+
+                                                        <p:column>
+                                                            <h:outputText id="unitOutputTextSchApp" styleClass="confirm" value="#{appScheduleBean.deptBean.department_SelectedUnit}" />
+                                                        </p:column>
+                                                    </p:row>
+
+                                                </p:panelGrid>
+                                            <p:spacer width="80" height="1" />
+                                             </p:panelGrid>
+                                        </p:panel>
+                                              <p:panelGrid >
+                                                    <p:row>
+                                                        <p:column >
+                                                            <p:commandButton value="#{mrmp.reset}" id="scheduleAppointmentSummaryResetButton" update="scheduleAppointmentWizard" actionListener="#{appScheduleBean.deptBean.department_Reset}" >
+                                                                 <f:param name="cid" value="SACID" />
+                                                            </p:commandButton>
+
+                                                        </p:column>
+                                                        <p:column >
+                                                            <p:spacer width="250" height="1" />
+                                                        </p:column>
+
+                                                        <p:column>
+
+                                                            <p:commandButton id="scheduleAppointmentButton" process="@this" oncomplete="dlgSchAppoint.hide()" value="#{mrmp.schedule}" actionListener="#{appScheduleBean.schedule_ScheduleAppointment}"  >
+                                                               <f:param name="cid" value="SACID" />
+                                                            </p:commandButton>
+                                                        </p:column>
+                                                    </p:row>
+                                                </p:panelGrid>
+                                             
+
+
+                                    </p:tab>
+
+                                </p:wizard>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="3" >
+                                <p:spacer width="300" height="70" />
+                            </p:column>
+                        </p:row>
+                        <f:facet name="footer">
+                            <p:row>
+                                <p:column colspan="3">
+                                    <p:spacer width="8" />
+                                    <p:commandButton  id="scheduleCancelButton" value="#{mrmp.close}" process="@this"  oncomplete="dlgScheduleAppointment.hide()"   actionListener="#{appScheduleBean.schedule_ScheduleAppointmentCancelButtonClickedListener}" />
+                                </p:column>
+                            </p:row>
+                        </f:facet>
+                    </p:panelGrid>
+                </h:form>
+            </p:dialog>
+        </ui:composition>
+    </h:body>
+</html>
+

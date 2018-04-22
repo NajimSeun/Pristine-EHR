@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+
+        <title>Discharge</title>
+    </h:head>
+    <h:body>
+        <p:dialog widgetVar="dischargeDlg" id="dischargeDialog" closable="true" dynamic="true" modal="true" showEffect="" hideEffect="" >
+            <h:form >
+
+                <div class="panel-bs-2 panel-info">
+                    <div class="panel-heading grey">
+                        <h3 class="panel-title text-center">#{mrmp.discharges} - #{admissionsBean.admissionForOutcome.patient_Adm.name} #{admissionsBean.admissionForOutcome.patient_Adm.surname}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="rows">
+                            <div class="small-12 columns">
+                                <p:message  for="dischargeButtonDischarge" showSummary="true" />
+                                <p:message for="dischargeSchAppButtonDischarge" />
+                                <p:message for="dischargedateCalendar" />
+                                <p:message for="appointmentDateCalendar" />
+                            </div>
+
+                        </div>
+
+                        <div class="rows">
+                            <div class="small-3 columns"><h:outputText value="#{mrmp.age}"/></div>
+                            <div class="small-3 columns"><h:outputText value="#{admissionsBean.admissionForOutcome.patient_Adm.age}" /></div>
+                            <div class="small-3 columns"><h:outputText value="#{mrmp.sex}" /></div>
+                            <div class="small-3 columns"><h:outputText value="#{admissionsBean.admissionForOutcome.patient_Adm.pinfo.sex}" /></div>
+                        </div>
+                        <div class="rows">
+                            <div class="small-2 columns"></div>
+                            <div class="small-8 columns"><p:calendar id="dischargedateCalendar" value="#{admissionsBean.outcomeDate}"  rendered="true" requiredMessage="#{mrmp.select} #{mrmp.discharge} #{mrmp.date}" label="#{mrmp.discharges} #{mrmp.date}"></p:calendar></div>
+                            <div class="small-2 columns"></div>
+                        </div>
+
+                        <div class="rows">
+                            <div class="small-2 columns"></div>
+                            <div class="small-8 columns"><p:calendar id="appointmentDateCalendar" label="#{mrmp.appointment} #{mrmp.date}"  value="#{admissionsBean.appointmentDate}"  required="true" requiredMessage="#{mrmp.select} #{mrmp.appointment} #{mrmp.date}" selectOtherMonths="true" /> </div>
+                            <div class="small-2 columns"></div>
+                        </div>
+
+                        <div class="rows">
+                            <div class="small-6 columns">
+                                <p:commandButton disabled="#{admissionsBean.buttonDisabled}" id="dischargeSchAppButtonDischarge" binding="#{DABID}" value="#{mrmp.discharges}/#{mrmp.schedule} #{mrmp.appointment}" process="@this,dischargedateCalendar,appointmentDateCalendar" actionListener="#{admissionsBean.discharge_DischargeScheduleAppointmentButtonClickedListener}" update="@this,dischargeButtonDischarge"  
+                                                                          icon="ui-icon-home" >
+                                    <f:param name="DABID" value="#{p:component('dischargeSchAppButtonDischarge')}" />
+
+                                </p:commandButton></div>
+                            <div class="small-3 columns"><p:commandButton id="dischargeButtonDischarge"  disabled="#{admissionsBean.buttonDisabled}" binding="#{DBID}" value="#{mrmp.discharges}" process="@this,dischargedateCalendar" actionListener="#{admissionsBean.discharge_DischargeButtonClickedListener}" icon="ui-icon-home" update="@this,dischargeSchAppButtonDischarge"  >
+                                    <f:param name="DBID" value="#{p:component('dischargeButtonDischarge')}" />
+                                </p:commandButton></div>
+                            <div class="small-3 columns"><p:commandButton process="@this"  value="#{mrmp.close}"  actionListener="#{admissionsBean.discharge_DischargeCloseButtonListener}" icon="ui-icon-close"  oncomplete="dischargeDlg.hide()" /></div>
+                        </div>
+                        <!-----Conversation not yet ended  ------>
+                    </div>
+
+
+                    <div class="panel-footer grey"></div>
+                </div>
+
+
+
+                <p:blockUI block="dischargeDialog" trigger="dischargeSchAppButtonDischarge,dischargeButtonDischarge" />
+
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>
+

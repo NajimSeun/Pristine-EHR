@@ -1,0 +1,161 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title> </title>
+    </h:head>
+    <h:body style="">
+        <p:dialog dynamic="true"   header="#{mrmp.admissions}" closable="true" modal="true"  id="admitDialog" widgetVar="admitDlg" height="400" width="550">
+            <f:ajax event="clos" listener="#{admissionBean.admission_AdmissionCloseListener}" />
+            <h:form>
+                <p:wizard id="admitWizard" showNavBar="false" showStepStatus="false" step="#{admissionBean.deptBean.currentStep}"   >
+                    <f:event type="preRenderComponent" listener="#{admissionBean.initConversation()}" />
+                    <p:tab id="admissionDeptTab" title="Select Department" >
+
+                        <p:treeTable value="#{admissionBean.rlhb.deptRoot}" id="deptSelectionTreeTableAdmit" selectionMode="single" selection="#{admissionBean.deptBean.department_SelectedTreeNode}" var="admDept"  >
+                            <f:facet name="header" >
+                                #{mrmp.department} #{mrmp.s}
+                            </f:facet>
+
+                            <p:column >
+                                <f:facet name="header">  
+                                    #{mrmp.name}
+                                </f:facet>  
+                                <h:outputText value="#{admDept.name}" />  
+                            </p:column>
+
+                            <p:column >
+                                <f:facet name="header">  
+                                    #{mrmp.schedule}
+                                </f:facet>  
+                                <h:outputText value="#{admDept.schedule}" />  
+                            </p:column>
+
+                            <p:column >
+                                <f:facet name="header">  
+                                    #{mrmp.personnel}#{mrmp.s}
+                                </f:facet>  
+                                <h:outputText value="#{admDept.personnel}" />  
+                            </p:column>
+                        </p:treeTable>
+                        <div class="row">
+                            <div class="columns small-3 "></div>
+                            <div class="columns small-6"> </div>
+                            <div class="columns small-3">
+                                <p:commandButton value="#{mrmp.next}" actionListener="#{admissionBean.deptBean.department_DepartmentSelectButtonClickedListener}" process="@this,deptSelectionTreeTableAdmit" update="admitWizard" icon="ui-icon-arrowthick-1-e"  >
+                                  <f:param name="cid" value="ADMCID" />
+                                </p:commandButton>
+                            </div>
+                        </div>
+
+                    </p:tab>
+
+                    <p:tab id="dateWardtSelectionTabAdmit" title="#{mrmp.date} #{mrmp.andy} #{mrmp.ward}" >
+                        <p:calendar mode="inline" id="dateSelectionCalendarAdmit" value="#{admissionBean.admission.admissionDate}" label="#{mrmp.admissions}" showWeek="true" showOtherMonths="true" selectOtherMonths="true" pages="2" >
+                        </p:calendar>
+                        <p:panel>
+                            <div class="rows">
+                                <div class="columns small-4"><h:outputText value="#{mrmp.select} #{mrmp.ward}" /></div>
+                                <div class="columns small-6">
+                                    <p:selectOneMenu filter="true" id="wardSelectionAdmit" value="#{admissionBean.admission.ward}"   effect="bounce"  >
+
+                                        <f:selectItems  value="#{admissionBean.wards}" var="wards" itemLabel="#{wards}" itemValue="#{wards}" />
+                                    </p:selectOneMenu></div>
+                                <div class="columns small-2"></div>
+                            </div>
+                        </p:panel>
+                        <div class="rows">
+                            <div class="columns small-3">
+                                <p:commandButton  icon="ui-icon-arrowthick-1-w" actionListener="#{admissionBean.deptBean.department_DatePrevButtonClickedListener}" value="#{mrmp.previous}" process="@this" update="admitWizard" >
+                                  <f:param name="cid" value="ADMCID" />
+                                </p:commandButton>
+                            </div>
+                            <div class="columns small-6"></div>
+                            <div class="columns small-3">
+                                <p:commandButton value="#{mrmp.next}" actionListener="#{admissionBean.admission_AdmissionWardDateSelectButtonClickedListener}" icon="ui-icon-arrowthick-1-w" process="@this" update="admitWizard"  >
+                                  <f:param name="cid" value="ADMCID" />
+                                </p:commandButton></div>
+                        </div>
+                    </p:tab>
+
+                    <p:tab id="summarySelectionTabAdmit" title="#{mrmp.summary} " >
+                        <p:panel  id="summarySelectionTabPanelAdmit">
+                        <div class="row">
+                            <div class="columns small-6">
+                                <h:outputText value="#{mrmp.name}" />
+                            </div>
+                            <div class="columns small-6">
+                                <h:outputText value="#{medicalRecordManagerBean.selectedPatient.name}  #{medicalRecordManagerBean.selectedPatient.surname}" />
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="row">
+                            <div class="columns small-6">
+                                <h:outputText value="#{mrmp.date}" >
+                                  
+                                </h:outputText>
+                                
+                            </div>
+                            <div class="columns small-6">
+                                <h:outputText value="#{admissionBean.admission.admissionDate}" >
+                                    <f:convertDateTime pattern="EEE, dd MMM, yyyy"  />
+                                </h:outputText>
+                                
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="row">
+                            <div class="columns small-6">
+                                <h:outputText value="#{mrmp.department}" />
+                                
+                            </div>
+                            <div class="columns small-6">
+                                <h:outputText value="#{admissionBean.deptBean.department_SelectedDepartment}" />
+                            </div>
+                            
+                        </div>
+                        
+                        <div class="row">
+                            <div class="columns small-6">
+                                <h:outputText value="#{mrmp.unit}" />
+                                
+                            </div>
+                            <div class="columns small-6">
+                                <h:outputText value="#{admissionBean.deptBean.department_SelectedUnit}" />
+                            </div>
+                            
+                        </div>
+                        </p:panel>
+                        
+                             
+                        <div class="row">
+                            <div class="columns small-3">
+                                <p:commandButton value="#{mrmp.reset}" process="@this" update="admitWizard" actionListener="#{admissionBean.deptBean.department_Reset()}" icon="ui-icon-refresh" >
+                                  <f:param name="cid" value="ADMCID" />
+                                </p:commandButton>
+                            </div>
+                            <div class="columns small-6">
+                                
+                            </div>
+                            <div class="columns small-3">
+                                <p:commandButton value="#{mrmp.admit}" icon="ui-icon-disk" process="@this" oncomplete="admitDlg.hide()" actionListener="#{admissionBean.admission_AdmissionAdmit()}" >
+                                    <f:param name="cid" value="ADMCID" />
+                                </p:commandButton>
+                            </div>
+                        </div>
+                            
+                            <p:spacer  height="1" width="5" />
+                            
+                       
+                    </p:tab>
+                </p:wizard>
+            </h:form>
+        </p:dialog>  
+    </h:body>
+</html>
+

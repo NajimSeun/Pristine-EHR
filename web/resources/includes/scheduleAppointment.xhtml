@@ -1,0 +1,148 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+    
+    <h:body>
+       <!--Looks Deprecreated== -->
+        <ui:composition>
+            <p:dialog closable="true" dynamic="true"  draggable="false"  hideEffect="fold" resizable="false" widgetVar="dlgSchAppoint"  >
+                <p:ajax  event="close" listener="" oncomplete="dlgSchAppoint.hide()" />
+                <h:form>
+                    <p:panelGrid   >
+                        <f:facet name="header">
+                            <p:row >
+                                <p:column colspan="3">
+                                    #{mrmp.schedule} #{mrmp.appointment}
+                                </p:column>
+                            </p:row>
+                        </f:facet>
+
+                        <p:row>
+                            <p:column colspan="3">
+                                <p:message for="calendarInput"   id="scheduleMsg" />
+                            </p:column>
+                        </p:row>
+                        <p:separator/>
+                        <p:row>
+                            <p:column colspan="3">
+                                <p:outputLabel for="calendarInput"  value="#{mrmp.appointment}" />
+                                <p:spacer width="5"/>
+                                <p:calendar   value="#{appScheduleBean.deptBean.schedule_selectedDate}" id="calendarInput" showOn="button"  mindate="#{appScheduleBean.minDate}" maxdate="#{appScheduleBean.maxDate}" showWeek="true" pattern="EEE, dd MMM, yyyy" >
+                                    <p:ajax event="dateSelect" listener="#{appScheduleBean.schedule_ScheduleAppointmentDateSelectedListener}" update="scheduleMsg deptSelectionButton" />
+                                </p:calendar>
+                            </p:column>
+                        </p:row> 
+                        <p:separator/>
+                        <p:row>
+                            <p:column colspan="3"  >
+                                <h:outputText value="#{mrmp.clinic}"/>
+                                <p:spacer width="5"/>
+                                <p:commandButton  id="deptSelectionButton" disabled="#{appScheduleBean.schedule_DepartmentSelectButtonDisabled}" 
+                                                  value="#{mrmp.select}" onclick="deptDlg.show()" />
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="3">
+                                <h:outputText value="#{appScheduleBean.deptBean.summary}" id="appointmentSummary" />
+                            </p:column>
+                        </p:row>
+                        <p:separator/>
+                        <f:facet name="footer">
+                            <p:row>
+                                <p:column colspan="3">
+                                    <p:commandButton  id="scheduleButton" update=":#{p:component('appointmentSuccessMsg')}"  value="#{mrmp.schedule}" actionListener="#{appScheduleBean.schedule_ScheduleAppointment}" oncomplete="appointmentSuccessDlg.show()"  />  
+                                    <p:commandButton  id="scheduleCancelButton" value="#{mrmp.cancle}"  onclick="dlgScheduleAppointment.close()" oncomplete="" actionListener="#{appScheduleBean.schedule_ScheduleAppointmentCancleButtonClickedListener}" />
+                                </p:column>
+                            </p:row>
+                        </f:facet>
+                    </p:panelGrid>
+                </h:form>
+            </p:dialog>
+
+
+
+
+
+
+
+            <p:dialog closable="false" draggable="false" widgetVar="schAppErrorDialog" header="#{mrmp.error}" >
+                <p:message for="scheduleApptMenuItem" />
+                <p:commandButton value="#{mrmp.ok}" onclick="schAppErrorDialog.hide()" />
+            </p:dialog>
+
+
+            <p:dialog closable="false" modal="true" widgetVar="appointmentSuccessDlg" draggable="false" header="#{mrmp.confirmation}" >
+                <p:panelGrid  columns="1"  >
+                    <p:message for="scheduleButton" id="appointmentSuccessMsg" />
+                    <p:commandButton value="#{mrmp.ok}" onclick="dlgSchAppoint.close()" oncomplete="appointmentSuccessDlg.close()" />
+                </p:panelGrid>
+            </p:dialog>
+
+
+            <p:dialog closable="false" widgetVar="appointmentCancelDlg" modal="true" >
+                <p:panelGrid  columns="1"  >
+                <p:message for="scheduleCancelButton" id="appointmentCanaelMsg" />
+                <p:commandButton value="#{mrmp.ok}" onclick="appointmentCancelDlg.close()"  />
+                </p:panelGrid>
+            </p:dialog>
+
+            
+            <p:dialog id="departmentInfoDialog" closable="false" dynamic="true" widgetVar="deptDlg" modal="true" header="#{mrmp.department}#{mrmp.s}" >
+                <p:panelGrid>
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:treeTable id="departmentTreeTable" value="#{appScheduleBean.deptBean.department_Root}" 
+                                         selectionMode="single" selection="#{appScheduleBean.deptBean.department_SelectedTreeNode}" var="dept" >
+                                <f:facet name="header">
+                                    #{mrmp.department}
+                                </f:facet>
+
+                                <p:column >
+                                    <f:facet name="header">  
+                                        #{mrmp.name}
+                                    </f:facet>  
+                                    <h:outputText value="#{dept.name}" />  
+                                </p:column>
+
+                                <p:column >
+                                    <f:facet name="header">  
+                                        #{mrmp.schedule}
+                                    </f:facet>  
+                                    <h:outputText value="#{dept.schedule}" />  
+                                </p:column>
+
+                                <p:column >
+                                    <f:facet name="header">  
+                                        #{mrmp.personnels}
+                                    </f:facet>  
+                                    <h:outputText value="#{dept.personnel}" />  
+                                </p:column>
+                            </p:treeTable>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:commandButton  actionListener="#{appScheduleBean.deptBean.department_departmentSelectButtonClickedListener}"  id="deptSelectButton"  value="#{mrmp.select}" update=":#{p:component('appointmentSummary')} :#{p:component('deptSelectButtonMsg')}" oncomplete="departmentselectHandler(xhr,status,args)" >
+                                <f:param  name="deptSelectButtonID" value="#{p:component('deptSelectButton')}" />
+                                <f:param name="for" value="schApp" />
+                            </p:commandButton>
+                        </p:column>
+                        <p:column>
+                            <p:commandButton actionListener="#{appScheduleBean.deptBean.department_ClearSelection}" onclick="deptDlg.close()"  value="#{mrmp.close}" />
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:dialog>
+            <p:dialog id="DeptSelectError" modal="true" header="#{mrmp.no} #{mrmp.selection}" widgetVar="deptErrorDlg" >
+                <p:message for="deptSelectButton" id="deptSelectButtonMsg" />                
+            </p:dialog>
+        </ui:composition>
+    </h:body>
+</html>
+

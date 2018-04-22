@@ -1,0 +1,186 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h:head>
+        <title></title>
+    </h:head>
+    <h:body style="">
+        <p:dialog resizable="false" modal="true" closable="false" dynamic="true" widgetVar="birthRegDlg"  >
+            <p:ajax listener="" event="close" />
+            <h:form id="birthRegForm">
+                <p:panel id="birthRegPanel"  header="#{mrmp.birth} #{pr.registration}"  >
+                    <f:event type="preRenderComponent" listener="#{birthRegistrationBean.initConversation()}"
+                    <p:message for="babyNameEntry" showSummary="true" />
+                    <p:message for="babySurnameEntry" showSummary="true" />
+                    <p:message for="babySexEntry" showSummary="true" />
+                    <p:message for="birthWeightSpinner" showSummary="true" />
+                    <p:message for="babyDateOfBirthEntry" showSummary="true" />
+                    <p:message for="babyTimeOfBirthEntry" showSummary="true" />
+
+
+                    <div class="row">
+                        <div class="columns small-3">
+                            <h:outputText value="#{mrmp.mothers} #{mrmp.id}" />
+                        </div>
+                        <div  class="columns small-3">
+                            <p:inputText value="#{birthRegistrationBean.birth.mother.id.ID}"   /></div>
+                        <div class="columns small-3">
+                            <p:inputText value="#{mrmp.mothers} #{mrmp.name}"  />
+                        </div>
+                        <div class="columns small-3">
+                            <p:inputText  value="#{birthRegistrationBean.birth.mother.surname} #{birthRegistrationBean.birth.mother.name} #{birthRegistrationBean.birth.mother.middleName}" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="columns small-3">
+                            <h:outputText value="#{mrmp.babys} #{mrmp.name}" />
+                        </div>
+                        <div  class="columns small-3">
+                            <p:inputText id="babyNameEntry"  value="#{birthRegistrationBean.birth.babyName}"   required="true"  requiredMessage="#{mrmp.babys} #{mrmp.name} #{pr.required}" />
+                        </div>
+                        <div class="columns small-3">
+                            <h:outputText value="#{mrmp.surname}" />
+                        </div>
+                        <div class="columns small-3">
+                            <p:inputText  id="babySurnameEntry"  value="#{birthRegistrationBean.birth.babySurname}" required="true" requiredMessage="#{mrmp.surname} #{pr.required}" />
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="columns small-3">
+                            <h:outputText value="#{mrmp.babys} #{mrmp.sex}" />
+                        </div>
+                        <div  class="columns small-3">
+                            <p:selectOneMenu  value="#{birthRegistrationBean.birth.babySex}" id="babySexEntry" required="true" requiredMessage="#{mrmp.babys} #{mrmp.sex} #{pr.required}" >
+                                <f:selectItem noSelectionOption="true"  itemLabel="#{mrmp.select}" itemValue="#{mrmp.select}" />
+                                <f:selectItem itemValue="#{regprop.male}" itemLabel="#{regprop.male}" />
+                                <f:selectItem itemValue="#{regprop.female}" itemLabel="#{regprop.female}" />
+                            </p:selectOneMenu>
+                        </div>
+                        <div class="columns small-3">
+                            <h:outputText value="#{mrmp.babys} #{mrmp.birth} #{mrmp.weightKG}" />
+                        </div>
+                        <div class="columns small-3">
+                            <p:spinner id="birthWeightSpinner" max="#{mrmp.sevenDigit}" stepFactor="0.1"  maxlength="#{mrmp.spinnerML}" min="#{mrmp.pointOne}" suffix="#{mrmp.kg}" value="#{birthRegistrationBean.birth.babyWeight}" requiredMessage="#{mrmp.birth} #{mrmp.weight} #{pr.required}" required="true"     />
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="columns small-3">
+                            <h:outputText value="#{pr.date} #{pr.ofbirth}"  />
+                        </div>
+                        <div  class="columns small-3">
+                            <p:calendar  readonlyInput="true" pattern="EEE, dd MMM, yyyy" id="babyDateOfBirthEntry"  value="#{birthRegistrationBean.birth.babyDateOfBirth}" required="true" requiredMessage="#{mrmp.date} #{pr.ofbirth} #{pr.required}" yearRange="c-0:c+0"  />     
+                        </div>
+                        <div class="columns small-2">
+                            <h:outputText value="#{mrmp.time} #{pr.ofbirth}" />
+                        </div>
+                        <div class="columns small-2">
+                            <p:calendar timeOnly="true" pattern="HH:mm"  readonlyInput="true" value="#{birthRegistrationBean.birth.babyTimeOfBirth}" required="true" requiredMessage="#{mrmp.time} #{pr.ofbirth} #{pr.required}" >
+                                <p:ajax event="dateSelect" update="birthTimeOfBirthOutputText" listener="#{birthRegistrationBean.birth_BirthTimeOfBirthSelectAjaxListener}" />
+                            </p:calendar> 
+                            <div class="columns small-2">
+                                <h:outputText value="#{birthRegistrationBean.birth.birthTimeString}"  id="birthTimeOfBirthOutputText"/>
+                            </div>
+                        </div>
+                    </div>
+
+                   
+
+
+                    <div class="row">
+                        <div class="columns small-3">
+                            <h:outputText value="#{mrmp.mode} #{mrmp.of} #{mt.delivery}" />
+                        </div>
+                        <div class="columns small-3">
+                            <p:selectOneMenu  value="#{birthRegistrationBean.birth.modeOfDelivery}" required="true" >
+                                <f:selectItem noSelectionOption="true"  itemLabel="#{mrmp.select}" itemValue="#{mrmp.select}" />
+                                <f:selectItem itemValue="#{mt.cs}" itemLabel="#{mt.cs}" />
+                                <f:selectItem itemValue="#{mt.vaginal}" itemLabel="#{mt.vaginal}" />
+                            </p:selectOneMenu>
+                        </div>
+
+                        <div class="columns small-3">
+                            <h:outputText value="#{mrmp.delivered}" />
+                        </div>
+                        <div class="columns small-3">
+                            <p:selectOneRadio value="" id="birthDeliveredSelectOneEntry" required="true"    >
+                                <p:ajax listener="#{birthRegistrationBean.birth.delivered}" update="apgarAtOneEntry,apgarAtFiveEntry,apgarAtTenEntry" />
+                                <f:selectItem itemLabel="#{mrmp.dead}" itemValue="Dead" />
+                                <f:selectItem itemLabel="#{mrmp.live}" itemValue="Live" />
+                            </p:selectOneRadio>
+                        </div>
+
+
+                    </div>
+
+                    
+                    
+                     <div class="row">
+                        <div class="columns small-2"><h:outputText value="#{mt.apgarscore}   #{mrmp.at} #{mrmp.onemin}" /></div>
+                        <div  class="columns small-2">
+                            <p:spinner  id="apgarAtOneEntry" size="15" disabled="#{birthRegistrationBean.apgarDisabled}"  value="#{birthRegistrationBean.birth.apgarAtOne}"   min="0" max="10" required="true" requiredMessage="#{mt.apgarscore} #{pr.required}" />
+                        </div>
+                        <div class="columns small-2">
+                            <h:outputText value="#{mrmp.at} #{mrmp.fivemin}" /> 
+                        </div>
+                        <div class="columns small-2"><p:spinner id="apgarAtFiveEntry" disabled="#{birthRegistrationBean.apgarDisabled}" value="#{birthRegistrationBean.birth.apgarAtFive}"   label="#{mrmp.fivemin}" min="0" max="10" required="true" requiredMessage="#{mt.apgarscore} #{pr.required}" /></div>
+                        <div class="columns small-2">
+                            <h:outputText value="#{mrmp.at} #{mrmp.tenmin}" />
+                        </div>
+                        <div class="columns small-2">
+                            <p:spinner value="#{birthRegistrationBean.birth.apgarAtTen}" disabled="#{birthRegistrationBean.apgarDisabled}" id="apgarAtTenEntry"  label="#{mrmp.tenmin}" min="0"  max="10" required="true" requiredMessage="#{mt.apgarscore} #{pr.required}" /></div>
+
+                    </div>
+
+                    
+                    
+                    <div class="row">
+                        <div class="columns small-3">
+                            <h:outputText value="#{mt.gestation}" />
+                        </div>
+                        <div class="columns small-3">
+                            <p:selectOneRadio value="#{birthRegistrationBean.birth.gestationType}" required="true" id="gestationMultiplicityEntry" >
+                                <f:selectItem itemLabel="#{mrmp.single}" itemValue="Single" />
+                                <f:selectItem itemLabel="#{mrmp.multiple}" itemValue="Multiple" />
+                            </p:selectOneRadio>
+                        </div>
+
+                        <div class="columns small-3"><h:outputText value="#{mrmp.deliveredby}" id="deliveredByEntry" /></div>
+                        <div class="columns small-3"><p:inputText value="#{birthRegistrationBean.birth.delieverdBy}" /></div>
+                    </div>
+                </p:panel>
+                <div class="row">
+                    <div>
+                        <div class="columns small-6"></div>
+                    </div>
+                    <div class="columns small-3">
+                        <p:commandButton value="#{mrmp.register} #{mrmp.birth}" actionListener="#{birthRegistrationBean.birth_BirthRegisterBirthButtonClickedListener()}" icon="ui-icon-search" process="birthRegForm" update="@this" >
+                            <f:param name="cid" value="BRBCID" />
+                        </p:commandButton>
+                    </div>
+                    <div class="columns small-3">
+                        <p:commandButton value="#{mrmp.cancel}" onclick="birthRegDlg.hide()" process="@this" actionListener="#{birthRegistrationBean.birth_BirthRegistrationCloseButtonClickedListener}" >
+                          <f:param name="cid" value="BRBCID" />
+                        </p:commandButton>
+                    </div>
+                </div>
+                <pe:keyFilter for="babyNameEntry" regEx="/[a-z-]/i" />
+                <pe:keyFilter for="babySurnameEntry" regEx="/[a-z-]/i" />
+                <pe:keyFilter for="motherNameEntry" regEx="/[a-z-]/i" />
+                <pe:keyFilter for="motherSurnameEntry" regEx="/[a-z-]/i" />
+                <pe:keyFilter for="motherIDEntry" regEx="/[a-z-]/i" />
+                <pe:keyFilter for="fatherNameEntry" regEx="/[a-z-]/i" />
+                <pe:keyFilter for="deliveredByEntry" regEx="/[a-z-]/i" />
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>
+

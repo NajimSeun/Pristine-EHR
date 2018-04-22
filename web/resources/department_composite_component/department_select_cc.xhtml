@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <!-- INTERFACE==== -->
+    <cc:interface>
+        <cc:attribute name="departmentSelectTarget" required="true"   id="targetCCId" />
+        <cc:attribute name="selectedDepartmentTreeNode" required="true" type="org.primefaces.model.TreeNode" id="departmentSelectedDepartmentId" />
+        <cc:attribute name="departmentsRootTreeNode" required="true" type="org.primefaces.model.TreeNode" />
+        <cc:attribute name="deptSelectEventListener" required="true"   method-signature="void patientAppDeptSelectListenerEdit(org.primefaces.event.NodeSelectEvent)" />
+                      <cc:attribute name="deptSelectComponentsForUpdate"   />   
+
+</cc:interface>
+
+    <!-- IMPLEMENTATION -->
+    <cc:implementation>
+        
+        <p:overlayPanel  dynamic="false" for="#{cc.attrs.departmentSelectTarget}" id="departmentDis"  >
+            <p:treeTable id="departmentDisplayTreeTable" value="#{cc.attrs.departmentsRootTreeNode}" 
+                         selectionMode="single" selection="#{cc.attrs.selectedDepartmentTreeNode}" var="dept" >
+                <p:ajax event="seclect" listener="#{cc.attrs.deptSelectEventListener}" update="#{cc.attrs.deptSelectComponentsForUpdate}" />
+                                    <f:facet name="header">
+                                        #{mrmp.department}
+                                    </f:facet>
+
+                                    <p:column >
+                                        <f:facet name="header">  
+                                            #{mrmp.name}
+                                        </f:facet>  
+                                        <h:outputText value="#{dept.name}" />  
+                                    </p:column>
+
+                                    <p:column >
+                                        <f:facet name="header">  
+                                            #{mrmp.schedule}
+                                        </f:facet>  
+                                        <h:outputText value="#{dept.schedule}" />  
+                                    </p:column>
+
+                                    <p:column >
+                                        <f:facet name="header">  
+                                            #{mrmp.personnel}
+                                        </f:facet>  
+                                        <h:outputText value="#{dept.personnel}" />  
+                                    </p:column>
+                                </p:treeTable>
+                                </p:overlayPanel>
+    </cc:implementation>
+</html>

@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body style="">
+        <h:form>
+             
+            
+            <p:dialog id="departmentInfoDialog" closable="false" dynamic="true" widgetVar="deptDlg" modal="true" header="#{mrmp.department}#{mrmp.s}" >
+                <p:panelGrid>
+                    <p:row>
+                        <p:column colspan="2">
+                            <p:treeTable id="departmentTreeTable" value="#{departmentViewerBean.deptBean.department_Root}" 
+                                         selectionMode="single"  var="dept" >
+                                <f:facet name="header">
+                                    #{mrmp.department}
+                                </f:facet>
+
+                                <p:column >
+                                    <f:facet name="header">  
+                                        #{mrmp.name}
+                                    </f:facet>  
+                                    <h:outputText value="#{dept.name}" />  
+                                </p:column>
+
+                                <p:column >
+                                    <f:facet name="header">  
+                                        #{mrmp.schedule}
+                                    </f:facet>  
+                                    <h:outputText value="#{dept.schedule}" />  
+                                </p:column>
+
+                                <p:column >
+                                    <f:facet name="header">  
+                                        #{mrmp.personnels}
+                                    </f:facet>  
+                                    <h:outputText value="#{dept.personnel}" />  
+                                </p:column>
+                            </p:treeTable>
+                        </p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column>
+                            <p:spacer width="7" />
+                        </p:column>
+                        <p:column>
+                            <p:commandButton  onclick="deptDlg.close()"  value="#{mrmp.close}" />
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:dialog>
+            <p:dialog id="noDeptelectedError" modal="true" header="#{mrmp.no} #{mrmp.selection}" widgetVar="noDeptSelDlg" >
+                <p:message for="deptSelectButton" />                
+            </p:dialog>
+        </h:form>
+    </h:body>
+</html>
+

@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:px="http://primefaces.org/ui/extensions"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body style="">
+        <p:dialog widgetVar="mortalityRegDlg" closable="false" modal="true" dynamic="true" id="mortalityDialog" >
+            <h:form>
+                <p:panel>
+                    <p:message for="" showDetail="true" />
+                    <div class="row">
+                    <div class="columns small-3"><h:outputText value="#{mrmp.id}" /></div>
+                    <div class="columns small-3"><h:outputText value="#{admissionsBean.admissionForOutcome.patient_Adm.id.ID}" /></div>
+                    <div class="columns small-3"><h:outputText value="#{mrmp.name}" /></div>
+                    <div class="columns small-3"><h:outputText value="#{admissionsBean.admissionForOutcome.patient_Adm.name}" /></div>
+                </div>
+                
+                <div class="row">
+                    <div class="columns small-3"><h:outputText value="#{mrmp.middleName}"/></div>
+                    <div class="columns small-3"><h:outputText value="#{admissionsBean.admissionForOutcome.patient_Adm.middleName}" /></div>
+                    <div class="columns small-3"><h:outputText value="#{mrmp.surname}"</div>
+                    <div class="columns small-3"><h:outputText value="#{admissionsBean.admissionForOutcome.patient_Adm.surname}" /></div>
+                </div>
+                
+                <div class="row">
+                    <div class="columns small-3"><h:outputText value="#{mrmp.sex}" /></div>
+                    <div class="columns small-3"><h:outputText value="#{admissionsBean.admissionForOutcome.patient_Adm.pinfo.sex}" /></div>
+                    <div class="columns small-3"><h:outputText value="#{mrmp.age}" /></div>
+                    <div class="columns small-3"><h:outputText value="#{admissionsBean.admissionForOutcome.patient_Adm.age}" /></div>
+                </div>
+                
+                <div class="row">
+                    <div class="columns small-3"><h:outputText value="#{mrmp.date}/#{mrmp.time} #{mrmp.of} #{mrmp.death}" /></div>
+                    <div class="columns small-3"><p:calendar value="#{admissionsBean.outcomeDate}" pattern="MM/dd/yyyy hh:mm a" id="dateTimeOfDeathCalendar" showOtherMonths="true" readonlyInput="true" /> </div>
+                    <div class="columns small-3"><h:outputText value="#{mrmp.certifiedBy}" /></div>
+                    <div class="columns small-3"><p:inputText value="#{admissionsBean.mortality_CertifiedBy}" id="mortalityCertifiedByEntry"</div>
+                </div>
+               
+                </p:panel>
+                
+                
+                <div class="row">
+                    
+                    <div class="columns small-3">
+
+                    </div>
+                    <div class="columns small-3">
+
+                    </div>
+                    <div class="columns small-3">
+                        <p:commandButton disabled="#{admissionsBean.buttonDisabled}" id="mortalityRegistrationButton" process="@this,dateTimeOfDeathCalendar,mortalityCertifiedByEntry"  value="#{mrmp.register}" actionListener="#{admissionsBean.mortality_MortalityRegistrationButtonClickedListener()}"  update="@this"
+                    </div>
+                    <div class="columns small-3">
+                            <p:commandButton  id="mortalityRegistrationCloseButton" value="#{mrmp.close}" onclick="mortalityRegDlg.hide()" type="button" >
+                                <f:param name="MRBID" value="#{p:component('mortalityRegistrationButton')}"
+                            </p:commandButton>
+                    </div>
+                </div>
+                
+                <px:keyFilter for="mortalityCertifiedByEntry" regEx="/[a-z-]/i" />
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>
+

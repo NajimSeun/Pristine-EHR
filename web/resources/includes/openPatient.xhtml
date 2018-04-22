@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:body style="">
+
+        
+
+        <ui:composition>
+            <p:dialog closable="true" draggable="false" dynamic="true"  appendTo="true" modal="true" hideEffect="fold" resizable="false" widgetVar="dlgOpen" width="650" height="450" >
+                <p:ajax event="close" listener="#{medicalRecordManagerBean.openPatient_OncloseEventListener}" update="#{p:component('openPatientPanel')}" />
+                <h:form id="openPatientForm">
+                     <p:panel id="openPatientPanel">
+
+                        <f:facet name="header" >
+                            #{mrmp.open} #{mrmp.patient}
+                        </f:facet>
+                        <p:messages showSummary="true" id="openMsg"  autoUpdate="true"   />
+                        <p:panelGrid  >
+                            <f:facet name="header" >
+                                #{mrmp.open} #{mrmp.patient}
+                            </f:facet>
+                            <p:row> <p:column colspan="2">
+                                    <p:toolbar>
+                                        <p:toolbarGroup align="left">
+                                            <p:graphicImage library="images" name="open_px_top_24x24.png" />
+
+                                        </p:toolbarGroup>
+
+
+
+                                        <p:toolbarGroup align="right">
+                                            <p:inputText value="#{medicalRecordManagerBean.openPatient_IDInput}" maxlength="10" id="openptIdInput" required="true" requiredMessage="#{mrmp.no} #{mrmp.match} #{mrmp.found}" styleClass="fieldCleared"  />
+                                            <p:separator />
+                                            <p:commandButton   actionListener="#{medicalRecordManagerBean.openPatient_OpenButtonClickedAjaxListener}"     value="#{mrmp.open} #{mrmp.patient}"  update="#{p:component('openPatientAddButton')}"    icon="ui-icon-document"   /> 
+                                              
+                                        </p:toolbarGroup>
+
+
+                                    </p:toolbar>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="2">
+                                    <p:spacer height="20" />
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="2" >
+                                    <p:outputPanel  autoUpdate="true">
+                                        <p:dataTable   value="#{medicalRecordManagerBean.openPatient_OpenedPatientList}" var="px" id="patientsToBeOpened"  emptyMessage="#{medicalRecordManagerBean.openPatient_EmptyMessage}"  >
+                                            <f:facet name="header">
+                                                #{mrmp.opened} #{mrmp.patients} #{medicalRecordManagerBean.openPatient_Num}/#{mrmp.opTotal} 
+                                            </f:facet>
+                                            <p:column  style="width:15px">
+                                                <h:graphicImage library="images" name="open_px.png"/>
+                                            </p:column>
+                                            <p:column headerText="#{mrmp.patient} #{mrmp.id}" footerText="#{mrmp.patient} #{mrmp.id}" style="width:150px" >
+                                                <h:outputText value="#{px.id.ID}" />
+                                            </p:column>
+                                            <p:column  headerText="#{mrmp.name}" footerText="#{mrmp.name}" style="width:150px">
+                                                <h:outputText value="#{px.name}" />
+                                            </p:column>
+                                            <p:column headerText="#{mrmp.surname}" footerText="#{mrmp.surname}" style="width:150px">
+                                                <h:outputText value="#{px.surname}" />
+                                            </p:column>
+                                            <p:column headerText="#{mrmp.age}"  footerText="#{mrmp.age}" style="width:150px">
+                                                <h:outputText value="#{px.age}"/>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </p:outputPanel>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="2">
+                                    <p:spacer height="30" />
+                                </p:column>
+                            </p:row>
+                            <f:facet name="footer"  >
+                                <p:row>
+                                    <p:column  colspan="2">
+
+
+                                        <p:commandButton icon="ui-icon-check" value="#{mrmp.add}" disabled="#{medicalRecordManagerBean.openPatient_AddPatientButtonDisabled}"
+                                                         oncomplete="dlgOpen.hide()" partialSubmit="true" actionListener="#{medicalRecordManagerBean.openPatient_AddButtonClickedAjaxListener}" id="openPatientAddButton" update="#{p:component('openPatientPanel')} :#{p:component('PatientsTable')}" />
+                                        <p:commandButton value="#{mrmp.close}" icon="ui-icon-close"   onclick="dlgOpen.hide()" actionListener="#{medicalRecordManagerBean.openPatient_CloseButtonClickedListener}" update="#{p:component('openPatientPanel')}"   />
+                                        
+                                    </p:column> 
+                                </p:row>
+                            </f:facet>
+                        </p:panelGrid>   
+
+                    </p:panel>
+                 
+             </h:form>
+            </p:dialog>
+        </ui:composition>
+    </h:body>
+</html>
+

@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ms="http://java.sun.com/jsf/composite/month_select_composite_component">
+    <h:head>
+        <title>Discharge</title>
+    </h:head>
+    <h:body>
+        <p:dialog closable="false" id="dischargesDialog" dynamic="true" height="500" header="#{mrmp.discharge}" maximizable="false" modal="true" width="450" >
+            <h:form id="dischargesForm">
+                 
+                    <p:panel     >
+                        <p:message for="viewDischargesButton" />
+                        <p:message for="dischargesMonthSelect" />
+                        <div class="row">
+                            <div class="columns small-6">
+                                <h:outputText value="#{mrmp.select} #{mrmp.month}" styleClass="confirm-font" />
+                            </div>
+                            <div class="columns small-6">
+                                <p:inputText id="dischargesMonthSelect" value="#{dischargesBean.dischargeMonth}"  required="true"  onmouseover="set_month_overlay_targetId('dischargesForm:dischargesMonthSelect')" />
+                                <ms:month_select_cc years="#{dischargesBean.msb.years}" target="#{p:component('dischargesMonthSelect')}" />
+                            </div>
+                        </div>   
+                        <div class="row">
+                            <div class="columns small-10"></div>
+                            <div class="columns small-2">
+                                <p:commandButton value="#{mrmp.view}" id="viewDischargesButton" iconPos="viewDischargesButton" icon="ui-icon-search" actionListener="#{dischargesBean.discharges_DischargesShowDischargesButtonClickedListener()}" process="@this,dischargesMonthSelect" update="dischargesTable" >
+                                    <f:param name="viewDischargeBID" value="#{p:component('viewDischargesButton')}" />
+                                </p:commandButton>
+                            </div>
+                        </div>
+                   </p:panel>
+
+
+                <p:dataTable id="dischargesTable" styleClass="noPadding"  var="dis"  value="#{dischargesBean.discharges}"  emptyMessage="#{mrmp.nodischarges}" 
+                                 paginator="true" widgetVar="dischargesTable" rows="10" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                 rowsPerPageTemplate="5,10,15" selectionMode="single"   >
+                        <f:facet name="header">
+                            #{mrmp.discharge}
+                             
+                        </f:facet>
+
+                    <p:column headerText="#{mrmp.name}" filterBy="#{dis.admission.patient_Adm.name}" >
+                            <h:outputText value="#{dis.admission.patient_Adm.name}" />
+                        </p:column>
+
+                    <p:column headerText="#{mrmp.surname}" filterBy="#{dis.admission.patient_Adm.surname}" >
+                            <h:outputText value="#{dis.admission.patient_Adm.surname}" />
+                        </p:column>
+
+                    <p:column headerText="#{dis.admission.patient_Adm.age}" >
+                            <h:outputText value="#{dis.admission.patient_Adm.age}" />
+                        </p:column>
+
+                    <p:column headerText="#{dis.admission.department}" >
+                            <h:outputText value="#{dis.admission.department}" />
+                        </p:column>
+
+                    <p:column headerText="#{dis.admission.unit}" >
+                            <h:outputText value="#{dis.admission.unit}" />
+                        </p:column>
+
+                    <p:column headerText="#{mrmp.admissions} #{mrmp.date}" filterBy="#{dis.admission.admissionDateStr}" >
+                        <h:outputText value="#{dis.admission.admissionDateStr}" />
+                    </p:column>
+                    
+                    <p:column headerText="#{mrmp.discharges} #{mrmp.date}" filterBy="#{dis.outcomeEventDateString}">
+                        <h:outputText value="#{dis.outcomeEventDateString}" />
+                    </p:column>
+                    </p:dataTable>
+                    <f:facet name="footer" >
+                        <p:spacer width="200" height="1" />
+                        <p:commandButton value="#{mrmp.close}" onclick="dischargesDialog" icon="ui-icon-close" />
+                    </f:facet>
+                
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>
+

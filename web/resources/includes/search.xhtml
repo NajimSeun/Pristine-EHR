@@ -1,0 +1,222 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+ 
+
+
+    <h:body>
+        <ui:composition>
+            <p:dialog closable="false" resizable="false" dynamic="true" appendToBody="true" widgetVar="searchDlg"  draggable="false" height="500" width="550"  header="#{mrmp.search}" id="searchDialog" modal="true">
+                
+                <h:form id="searchForm">
+                    <h:panelGroup style="width: 500px">
+
+                        <p:wizard id="searchWizard"   showStepStatus="false" showNavBar="false" widgetVar="searchWiz" style="width: 100%" step="#{searchBean.currentStep}"  >
+                            <p:tab title="#{mrmp.search} #{mrmp.criteria}"  id="searchCriteriaTab"  >
+                                <p:panel header="#{mrmp.search} #{mrmp.criteria}(#{mrmp.s})" style="width:100%" id="searchCriteriaTabPanel" >
+                                    <p:messages autoUpdate="true" />
+
+                                    <p:panelGrid >
+                                        <p:row >
+                                            <p:column>
+                                                <p:graphicImage name="search_50x50.png" library="images" >
+                                                    <f:event type="preRenderComponent" listener="#{searchBean.initConversation}"  />
+                                                </p:graphicImage>
+                                            </p:column>
+                                            <p:column>
+                                                <h4 style="color:#1eb5e7">#{mrmp.searchby} </h4> 
+                                            </p:column>
+                                            <p:column>
+                                                <p:selectManyCheckbox  label="#{mrmp.searchby}"  required="true" requiredMessage="#{mrmp.search} #{mrmp.criteria} #{pr.required}"  value="#{searchBean.search_SelectedCriterias}" id="searchCriteriasCBMenu" >
+                                                    <f:selectItems value="#{searchBean.search_SearchCriteria}" var="criteria" itemLabel="#{criteria}" itemValue="#{criteria}" />
+                                                </p:selectManyCheckbox>
+                                                 
+                                            </p:column>
+
+                                        </p:row>
+
+                                    </p:panelGrid>
+
+                                </p:panel>
+                                <p:panelGrid>
+                                    <p:row >
+                                        <p:column>
+                                            <p:spacer width="400"  height="1"/>
+                                        </p:column>
+
+                                        <p:column>
+                                            <p:commandButton value="#{mrmp.next}" actionListener="#{searchBean.search_SearchCriteriasNextButtonRCMDListener}"  process="@this,searchCriteriasCBMenu" update="searchWizard" icon="ui-icon-arrowthick-1-e" iconPos="right"    partialSubmit="true" >
+                                                <f:param name="cid" value="SDCID" />
+                                            </p:commandButton>
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </p:tab>
+                            <p:tab title="#{mrmp.search}" id="searchTab" >
+                                <p:panel header="#{mrmp.search}" id="searchTabPanel" style="width:100%"  >
+                                    <p:messages autoUpdate="true" />
+                                     
+                                        <p:panelGrid  >
+                                            <p:row>
+                                                <p:column>
+                                                    <p:outputLabel for="idInputsearch" value="#{mrmp.id}"  rendered="#{searchBean.search_SeachByIDChecked}"   />
+                                                </p:column>
+                                                <p:column>
+                                                    <p:inputText value="#{searchBean.search_ID}" id="idInputsearch"  required="true" 
+                                                                 requiredMessage="#{mrmp.pleaseInput} #{mrmp.hospital} #{mrmp.number} #{mrmp.orSelect}"
+                                                                 rendered="#{searchBean.search_SeachByIDChecked}" />
+                                                </p:column>
+                                            </p:row>
+                                            <p:row>
+                                                <p:column>
+                                                    <p:outputLabel for="nameInputsearch"  value="#{mrmp.name}" rendered="#{searchBean.search_SeachByNameChecked}"   />
+                                                </p:column>
+                                                <p:column>
+                                                    <p:inputText value="#{searchBean.search_Name}" id="nameInputsearch" 
+                                                                 requiredMessage="#{mrmp.pleaseInput} #{mrmp.name} #{mrmp.orSelect}" required="true"    rendered="#{searchBean.search_SeachByNameChecked}" />
+                                                </p:column>
+                                            </p:row>
+                                            <p:row>
+                                                <p:column>
+                                                    <p:outputLabel for="surnameInputsearch" value="#{mrmp.surname}"  rendered="#{searchBean.search_SeachBySurnameChecked}"  />
+                                                </p:column>
+                                                <p:column>
+                                                    <p:inputText value="#{searchBean.search_Surname}" required="true"  requiredMessage="#{mrmp.pleaseInput} #{mrmp.surname} #{mrmp.orSelect}" id="surnameInputsearch" rendered="#{searchBean.search_SeachBySurnameChecked}" />
+
+                                                </p:column>
+                                            </p:row>
+
+                                        </p:panelGrid>
+                                    
+                                </p:panel>
+                                <p:panelGrid>
+                                    <p:row>
+                                        <p:column>
+                                            <p:commandButton value="#{mrmp.previous}" icon="ui-icon-arrowthick-1-w"  immediate="true" partialSubmit="true" process="@this" update="searchWizard"  actionListener="#{searchBean.search_SearchPreviousButtonClickedListener}" >
+                                                <f:param name="cid" value="SDCID" />
+                                            </p:commandButton>
+                                        </p:column> 
+                                        <p:column headerText="one" >
+                                            <p:spacer width="320" height="1" />
+                                        </p:column>
+                                        <p:column>
+                                            <p:commandButton value="#{mrmp.next}" icon="ui-icon-arrowthick-1-e" iconPos="right"   partialSubmit="true" process="@this,searchTabPanel" update="searchWizard"  actionListener="#{searchBean.search_SearchNextButtonClickedListener}"  >
+                                              <f:param name="cid" value="SDCID" />
+                                            </p:commandButton>
+                                        </p:column>
+                                    </p:row>
+
+                                </p:panelGrid>
+                            </p:tab>
+                            <p:tab title="#{mrmp.search} #{mrmp.summary}" id="searchSummaryTab">
+                                <p:panel header="#{mrmp.summary}" id="summaryTabPanel" style="width:100%" >
+                                    <p:panelGrid style="width:100%" >
+                                        <p:row>
+                                            <p:column>
+                                                <h:outputText   value="#{mrmp.hospital} #{mrmp.number}"  rendered="#{searchBean.search_SeachByIDChecked}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <h:outputText id="idOutputTextSearch" value="#{searchBean.search_ID}"  style="font-weight:bold" rendered="#{searchBean.search_SeachByIDChecked}"/>
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <h:outputText   value="#{mrmp.name}" rendered="#{searchBean.search_SeachByNameChecked}"/>
+                                            </p:column>
+                                            <p:column>
+                                                <h:outputText id="nameOutputTextSearch" value="#{searchBean.search_Name}" style="font-weight:bold" rendered="#{searchBean.search_SeachByNameChecked}" />
+                                            </p:column>
+                                        </p:row>
+                                        <p:row>
+                                            <p:column>
+                                                <h:outputText   value="#{mrmp.surname}" rendered="#{searchBean.search_SeachBySurnameChecked}" />
+                                            </p:column>
+                                            <p:column>
+                                                <h:outputText id="surnameOutputTextSearch" value="#{searchBean.search_Surname}"  style="font-weight:bold" rendered="#{searchBean.search_SeachBySurnameChecked}"/>
+                                            </p:column>
+                                        </p:row>
+
+                                    </p:panelGrid>
+                                </p:panel>
+                                <p:panelGrid>
+                                    <p:row>
+                                        <p:column>
+                                            <p:commandButton value="#{mrmp.reset}" icon="ui-icon-arrowthick-1-w" partialSubmit="true" process="@this" update="searchWizard searchResultSearch"  actionListener="#{searchBean.search_SearchSummaryResetButtonClickedListener}" >
+                                               <f:param name="cid" value="SDCID" />
+                                            </p:commandButton>
+                                        </p:column>
+                                        <p:column>
+                                            <p:spacer width="300" height="1" />
+                                        </p:column>
+                                        <p:column>
+                                            <p:commandButton  value="#{mrmp.search}"  icon="ui-icon-search" iconPos="right" process="@this" update="searchResultSearch" actionListener="#{searchBean.search_ShowSearchResults()}" id="searchButtonSearch"  >
+                                                <f:param name="cid" value="SDCID" />
+                                            </p:commandButton>
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </p:tab>
+                        </p:wizard>
+                    </h:panelGroup>
+                   
+                    <p:panelGrid  >
+                        <p:row>
+                            <p:column >
+                                <p:dataTable var="px" value="#{searchBean.search_FoundMatches}"   id="searchResultSearch"  paginator="true" rows="20"   
+                                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"   rowKey="#{px.id.ID}"  >  
+
+                                    <f:facet name="header">
+                                        #{mrmp.found} #{mrmp.matches}
+                                    </f:facet>
+                                    <p:column selectionMode="single" style="width:12px" />  
+                                    <p:column  style="width:15px">
+                                        <h:graphicImage library="images" name="open_px.png"/>
+                                    </p:column>
+                                    <p:column footerText="#{mrmp.patient} #{mrmp.id}" headerText="#{mrmp.patient} #{mrmp.id}" style="width:150px" >
+                                        <h:outputText value="#{px.id.ID}" />
+                                    </p:column>
+                                    <p:column footerText="#{mrmp.name}" headerText="#{mrmp.name}" style="width:150px" >
+                                        <h:outputText value="#{px.name}" />
+                                    </p:column>
+                                    <p:column footerText="#{mrmp.surname}" headerText="#{mrmp.surname}" style="width:150px" >
+                                        <h:outputText value="#{px.surname}" />
+                                    </p:column>
+                                    <p:column style="width:8%" headerText="#{mrmp.details}" footerText="#{mrmp.details}">  
+                                        <p:commandButton   icon="ui-icon-search" title="#{mrmp.details}" oncomplete="detailDlg.show()">  
+                                            <f:setPropertyActionListener value="#{px}" target="#{searchBean.search_SelectedPatient}"  />  
+                                            <f:param  name="cid" value="SDCID" />
+                                        </p:commandButton>  
+                                    </p:column>  
+                                </p:dataTable>
+                            </p:column>
+                        </p:row>
+                         
+                        <f:facet name="footer">
+                            <p:row>
+                                <p:column>
+                                    <p:commandButton  value="#{mrmp.open} #{mrmp.selection}" > 
+                                        <f:param name="cid" value="SDCID" />
+                                    </p:commandButton>
+                                    <p:commandButton value="#{mrmp.close}"  actionListener="#{searchBean.search_SearchDialogClosedListener}" onclick="searchDlg.hide()"   >
+                                        <f:param name="cid" value="SDCID" />
+                                    </p:commandButton>
+                                </p:column>
+                            </p:row>
+                        </f:facet>
+
+
+                    </p:panelGrid>
+
+
+                </h:form>
+            </p:dialog>
+        </ui:composition>
+
+    </h:body>
+</html>
+

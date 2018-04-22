@@ -1,0 +1,280 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+    
+    <h:body>
+        <ui:composition>
+            <p:dialog closable="true" width="820" height="615"  resizable="false" header="#{pr.patient} #{pr.registration}"    dynamic="true" modal="true" widgetVar="ptregdlg" >
+                 <p:ajax event="close" listener="#{patientRegistrationBean.patientRegistrationDialogCloseListener}"   update="#{p:component('personalInformationPanel')} #{p:component('contactInfoPanel')} #{p:component('confirmPanel')}" />
+                <h:form id="ptRegForm" >
+                    <p:wizard widgetVar="patientRegistrationWizard"   flowListener="#{patientRegistrationBean.onFlowProcess}" id="ptRegWizard" step="#{patientRegistrationBean.step}"   >
+
+                        <p:tab id="personalInformationTab" title="#{pr.personal}"  >
+                            <p:panel  id="personalInformationPanel" header="#{pr.personal} #{pr.info}" >
+                                <p:messages id="errorMessages"  severity="error" autoUpdate="true" /> 
+                                <p:panelGrid >
+                                    <p:row>
+                                        <p:column>
+
+                                            <p:panelGrid columns="2" style="border-width:0px" >
+                                                <p:graphicImage library="images" name="new_px.png" />
+                                                <p:spacer width="10" />
+                                                <h4   style="color:#1eb5e7">NEW PATIENT</h4>
+                                                <p:spacer width="10" />
+
+                                                <h:outputText  value="#{pr.hospital} #{pr.code}"  />
+
+                                                <h:outputText value="#{patientRegistrationBean.hospitalCode}"/>
+                                                <h:outputText value="#{pr.hospitalname}" />
+                                                <h:outputText value="#{patientRegistrationBean.hospitalName}" />
+                                                <p:outputLabel for="patientHospitalNumberInput" value="#{pr.patient} #{pr.hospitalNumber}" />
+                                                <p:inputText required="true"  requiredMessage="#{pr.hospitalNumber}:#{pr.required}" validator="#{patientRegistrationBean.validatePatientHospitalNumber}"  validatorMessage="#{pr.hospitalNumber}:#{pr.required}" id="patientHospitalNumberInput" value="#{patientRegistrationBean.patient.id.ID}" readonly="#{patientRegistrationBean.hospitalNumberEntryReadOnly}" />
+                                                <p:outputLabel for="autogenerateButton" id="autogenerateButtonLabel" value="#{pr.autogenerate} #{pr.patient} #{pr.hospitalnum}"  />
+                                                <p:selectBooleanButton id="autogenerateButton" offLabel="#{pr.no}"  onLabel="#{pr.yes}" onIcon="ui-icon-checked" offIcon="ui-icon-close">
+                                                    <p:ajax  listener="#{patientRegistrationBean.autogenerateListener}"  update="patientHospitalNumberInput" />
+                                                </p:selectBooleanButton>  
+
+
+
+                                                <h:outputLabel value="#{pr.name}" id="nameOutputLabel"/>
+                                                <p:inputText value="#{patientRegistrationBean.patient.name}" id="nameEntry" required="true" requiredMessage="#{regprop.name}:#{regprop.required}"  />
+
+
+                                                <h:outputLabel value="#{pr.surname}" id="surnameOutputLabel"/>
+                                                <p:inputText value="#{patientRegistrationBean.patient.surname}" id="surnameEntry" required="true" requiredMessage="#{regprop.surname}:#{regprop.required}"  />
+
+                                                <h:outputLabel value="#{pr.middlename}" id="middleNameOutputLabel"/>
+                                                <p:inputText value="#{patientRegistrationBean.patient.middleName}" required="false" id="middleNameEntry" />
+
+
+
+
+                                                <h:outputLabel value="#{pr.date} #{pr.ofbirth}" id="dateOfBirthOutputLabel" />
+                                                <p:inputMask id="dateOfBirthEntry"  converterMessage="Error converting" mask="#{pr.datemask}" value="#{patientRegistrationBean.patient.dateOfBirth}" required="true" requiredMessage="#{regprop.date} #{regprop.of} #{regprop.birth}:#{regprop.required}" >
+                                                    <f:validator validatorId="com.mpit.pristine.utility.DateValidator"  />
+                                                    <f:convertDateTime  pattern="dd/MM/yyyy" />
+                                                </p:inputMask>
+
+
+                                                <h:outputLabel value="#{pr.sex}" id="sexEntryLabelValue" />
+                                                <p:selectOneRadio id="sexSelectOneRadio" value="#{patientRegistrationBean.patient.pinfo.sex}" required="true" requiredMessage="#{regprop.sex}:#{regprop.required}" layout="pageDirection"> 
+
+                                                    <f:selectItem  itemValue="Female" itemLabel="#{regprop.female}" />
+                                                    <f:selectItem itemLabel="#{regprop.male}" itemValue="Male" />
+                                                </p:selectOneRadio>
+
+                                                <h:outputLabel for="maritalStatusSelectOneMenu" value="#{regprop.select} #{pr.maritalStatus}" />
+                                                <p:selectOneMenu id="maritalStatusSelectOneMenu" validator="#{patientRegistrationBean.validateMaritalStatus}"   value="#{patientRegistrationBean.patient.pinfo.maritalStatus}"    required="true"  validatorMessage="#{regprop.maritalStatus}:#{regprop.required}"  requiredMessage="#{regprop.maritalStatus}:#{regprop.required}" >
+                                                    <p:ajax  listener="#{patientRegistrationBean.maritalStatusChangedListener}"  />
+                                                    <f:selectItem noSelectionOption="true"  itemValue="Select" itemLabel="Select"  />
+                                                    <f:selectItem itemLabel="#{regprop.single}" itemValue="Single" />
+                                                    <f:selectItem itemLabel="#{regprop.married}" itemValue="Married" />
+                                                    <f:selectItem itemLabel="#{regprop.divorced}" itemValue="Divorced" />
+                                                </p:selectOneMenu>
+
+                                                <h:outputLabel value="#{pr.select} #{pr.religion}" id="religiOutputLabel" />
+                                                <p:selectOneRadio value="#{patientRegistrationBean.patient.pinfo.religion}" id="religionSelectOneRadio" required="true" requiredMessage="#{regprop.religion}:#{pr.required}">
+                                                    <f:selectItem  itemLabel="#{regprop.islam}" itemValue="Islam"/>
+                                                    <f:selectItem itemLabel="#{regprop.christianity}" itemValue="Christianity" />
+                                                    <f:selectItem itemLabel="#{regprop.other}" itemValue="others" />
+                                                </p:selectOneRadio>
+                                            </p:panelGrid>
+                                        </p:column>
+
+                                        <p:column>
+                                            <p:panelGrid columns="2">
+                                                <h:outputLabel value="#{pr.select} #{pr.ethnicity}" id="ethnicityOutputLabel" />
+                                                <p:selectOneMenu  id="ethnicitySelectOneMenu"  validator="#{patientRegistrationBean.validateEthicitySelection}" validatorMessage="#{pr.ethnicity}:#{pr.required}" value="#{patientRegistrationBean.patient.pinfo.ethnicity}" required="true" requiredMessage="#{pr.ethnicity}:#{pr.required}" >
+                                                    <f:selectItem  itemValue="Select" itemLabel="Select" />
+                                                    <f:selectItem itemLabel="Hausa" itemValue="Hausa" />
+                                                    <f:selectItem itemLabel="Igbo" itemValue="Igbo" />
+                                                    <f:selectItem  itemLabel="Yoruba" itemValue="Yoruba" />
+                                                </p:selectOneMenu>
+                                                <p:outputLabel for="emailEntry" value="#{pr.email}" />
+                                                <p:inputText id="emailEntry" value="#{patientRegistrationBean.patient.cinfo.email}" required="false" />
+
+
+                                                <p:outputLabel value="#{pr.enter} #{pr.occupation}" for="occupationAutoComplete" />
+                                                <p:autoComplete  id="occupationAutoComplete"  validator="#{patientRegistrationBean.validateOccupationEntry}"  validatorMessage="#{pr.occupation}:#{pr.required}" completeMethod="#{patientRegistrationBean.completeOccupation}" required="true" forceSelection="true" value="#{patientRegistrationBean.patient.pinfo.occupation}"  requiredMessage="#{pr.occupation}:#{pr.required}" />
+
+
+                                                <p:outputLabel for="countryEntry" value="#{pr.select} #{pr.country}" />
+                                                <p:selectOneMenu value="#{patientRegistrationBean.patient.pinfo.country}"   validator="#{patientRegistrationBean.validateCountrySelection}" id="countryEntry" effect="explode" required="true" requiredMessage="#{pr.country} #{pr.required}" validatorMessage="#{pr.country}:#{pr.invalid}" >
+
+                                                    <f:selectItems value="#{patientRegistrationBean.countryList}"  />
+                                                    <p:ajax event="valueChange" process="@this" update="stateEntry locgovEntry" listener="#{patientRegistrationBean.countryChangedAjaxListener}" />
+
+                                                </p:selectOneMenu>
+
+
+                                                <p:outputLabel for="stateEntry" value="#{pr.select} #{pr.state}" />
+                                                <p:selectOneMenu id="stateEntry" validator="#{patientRegistrationBean.validateStateSelection}" value="#{patientRegistrationBean.patient.pinfo.stateOfOrigin}" required="true" requiredMessage="#{pr.state} #{pr.required}" validatorMessage="#{pr.state}:#{pr.invalid}" >
+                                                    <p:ajax process="@this" update="locgovEntry" listener="#{patientRegistrationBean.stateChangedAjaxListener}" />
+
+                                                    <f:selectItems value="#{patientRegistrationBean.statesList}"  />
+                                                </p:selectOneMenu>
+
+
+                                                <p:outputLabel value="#{pr.select} #{pr.localgovernment}" for="locgovEntry" />
+                                                <p:selectOneMenu value="#{patientRegistrationBean.patient.pinfo.localGovArea}" validator="#{patientRegistrationBean.validateLocGovSelection}" required="true" requiredMessage="#{pr.localgovernment} #{pr.required}" id="locgovEntry"  validatorMessage="#{pr.localgovernment}: #{pr.invalid}" >
+
+                                                    <f:selectItems value="#{patientRegistrationBean.localGovList}"  />
+                                                </p:selectOneMenu>
+
+
+                                            </p:panelGrid>
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </p:panel>
+
+
+                        </p:tab>
+                        <p:tab title="Contact" id="contactTab">
+                            <p:panel id="contactInfoPanel" header="Contact Information">
+                             <p:messages id="cErrorMessages"  severity="error" autoUpdate="true" /> 
+                                <p:panelGrid columns="2">
+                                    <p:panelGrid columns="2" >
+
+                                        <p:graphicImage library="images" name="new_px.png" />
+                                        <p:spacer width="10" />
+                                        <h4   style="color:#1eb5e7">NEW PATIENT</h4>
+                                        <p:spacer width="10" />
+                                        <p:outputLabel value="#{pr.address}" for="addressEntry" />
+                                        <p:inputTextarea cols="25" rows="4" value="#{patientRegistrationBean.patient.cinfo.address}" id="addressEntry" required="true" requiredMessage="#{pr.address}:#{pr.required}" />
+
+                                        <p:outputLabel for="pxPhoneNumberEntry" value="#{pr.Phonenumber}" />
+                                        <p:inputMask size="25" value="#{patientRegistrationBean.patient.cinfo.phoneNumber}" mask="999-999-999-99" id="pxPhoneNumberEntry" required="false" />
+
+                                        <p:outputLabel id="workAddressLabel" for="workAddressEntry" value="#{pr.work} #{pr.address}" />
+                                        <p:inputTextarea  rows="4" cols="25" id="workAddressEntry" value="#{patientRegistrationBean.patient.cinfo.workAddress}"   required="false" />
+
+                                        <p:outputLabel value="#{pr.work} #{pr.Phonenumber}" for="workplaceNumber" />
+                                        <p:inputMask  size="25" id="workplaceNumber" value="#{patientRegistrationBean.patient.cinfo.workplaceNumber}" required="false" mask="999-999-999-99" />
+
+                                        <p:outputLabel value="#{pr.name} #{pr.nextofkin}" for="nameNextOfKinEntry" />
+                                        <p:inputText  size="25" value="#{patientRegistrationBean.patient.cinfo.nameNextOfKin}" required="true" id="nameNextOfKinEntry" requiredMessage="#{pr.nextofkin}:#{pr.required}"  />
+
+                                    </p:panelGrid> 
+
+                                    <p:panelGrid columns="2">
+
+                                        <p:spacer height="15" />
+                                        <p:spacer height="15" />
+                                        <p:outputLabel value="#{pr.address} #{pr.nextofkin}" for="addressNOK" />
+                                        <p:inputTextarea value="#{patientRegistrationBean.patient.cinfo.addressNextOfKin}" rows="4" cols="30" id="addressNOK" required="true" />
+
+                                        <p:outputLabel value="#{pr.relationship}" for="relWithNOKEntry" />
+                                        <p:inputText  size="25" value="#{patientRegistrationBean.patient.cinfo.relWithNOK}" required="true" id="relWithNOKEntry" requiredMessage="#{pr.relationjship} #{pr.with} #{pr.nextofkin}:#{pr.required}"  />
+
+                                        <p:outputLabel value="#{pr.nextofkin} #{pr.Phonenumber}" for="phoneNumberNOK" />
+                                        <p:inputMask  size="25" value="#{patientRegistrationBean.patient.cinfo.numNextOfKin}" required="false" id="phoneNumberNOK" mask="999-999-999-99" />
+                                    </p:panelGrid>
+                                </p:panelGrid>
+
+
+
+                            </p:panel>
+                        </p:tab>
+                        <p:tab title="confirmation" id="confirmation">
+                            <p:panel header="#{pr.confirm} #{pr.entered} #{pr.info}" id="confirmPanel">
+                                <p:panelGrid columns="3">
+                                    <p:panelGrid columns="2">
+                                        <p:graphicImage library="images" name="new_px.png" />
+                                        <p:spacer width="10" />
+                                        <h4   style="color:#1eb5e7">NEW PATIENT</h4>
+                                        <p:spacer width="10" />
+
+
+                                        <h:outputText     value="#{pr.hospitalname}" />
+                                        <h:outputText value="#{patientRegistrationBean.hospitalName}" id="hospitalNameConfirm" styleClass="confirm" />
+
+                                        <h:outputText   value="#{pr.hospitalNumber}" /> 
+                                        <h:outputText   id="hospitalNumConfirm" value="#{patientRegistrationBean.hospitalCode}" styleClass="confirm" />
+                                        <h:outputText  value="#{pr.patientNum}" />
+                                        <h:outputText value="#{patientRegistrationBean.patient.id.ID}" id="patientNumConfirm" styleClass="confirm" />
+
+                                        <h:outputText value="#{pr.name}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.name}" id="nameConfirm" styleClass="confirm" />
+                                        <h:outputText value="#{pr.surname}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.surname}" id="surnameConfirm" styleClass="confirm" />
+                                        <h:outputText value="#{pr.middlename}"    />
+                                        <h:outputText value="#{patientRegistrationBean.patient.middleName}"  id="middleNameConfirm" styleClass="confirm" />
+                                        <h:outputText value="#{pr.date} #{pr.ofbirth}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.dateOfBirth}" id="dobConfirm"  styleClass="confirm">
+                                            <f:convertDateTime  pattern="dd/MM/yyyy" />
+                                        </h:outputText>
+
+                                        <h:outputText value="#{pr.sex}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.pinfo.sex}" id="sexConfirm"   styleClass="confirm" />
+                                        <h:outputText value="#{pr.religion}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.pinfo.religion}" id="religionConfirm" styleClass="confirm" />
+                                        <h:outputText value="#{pr.maritalStatus}"   />
+                                        <h:outputLabel value="#{patientRegistrationBean.patient.pinfo.maritalStatus}" id="maritalStatusConfirm" styleClass="confirm" />
+
+                                        <h:outputText value="#{pr.occupation}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.pinfo.occupation}" id="occpaConfirm" styleClass="confirm" />
+                                        <h:outputText value="#{pr.address}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.cinfo.address}" id="addConfirm"  styleClass="confirm" />
+                                    </p:panelGrid>
+                                    <p:spacer width="60" />
+                                    <p:panelGrid columns="2">
+
+                                        <p:spacer height="98" />
+                                        <p:spacer height="98" />
+                                        <h:outputText value="#{pr.ethnicity}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.pinfo.ethnicity}" id="ethnicityConfirm" styleClass="confirm" />
+                                        <h:outputText value="#{pr.country}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.pinfo.country}" id="countryConfirm"  styleClass="confirm" />
+                                        <h:outputText value="#{pr.state}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.pinfo.stateOfOrigin}" id="stateConfirm" styleClass="confirm" />
+                                        <h:outputText value="#{pr.localgovernment}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.pinfo.localGovArea}" id="locgovConfirm" styleClass="confirm" />
+
+                                        <h:outputText value="#{pr.Phonenumber}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.cinfo.phoneNumber}" id="phoneNumConfirm" styleClass="confirm" />
+
+                                        <h:outputText value="#{pr.work} #{pr.address}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.cinfo.workAddress}" id="waddConfirm" styleClass="confirm" />
+                                        <h:outputText value="#{pr.work} #{pr.Phonenumber}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.cinfo.workplaceNumber}" id="wPhoneConfirm" styleClass="confirm" />
+                                        <h:outputText value="#{pr.email}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.cinfo.email}" id="emailConfirm"  styleClass="confirm" /> 
+                                        <h:outputText value="#{pr.nextofkin}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.cinfo.nameNextOfKin}" id="nokConfirm" styleClass="confirm" />
+                                        <h:outputText value="#{pr.relationship}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.cinfo.relWithNOK}" id="relnokConfirm" styleClass="confirm" />
+                                        <h:outputText value="#{pr.address} #{pr.nextofkin}"   /> 
+                                        <h:outputText value="#{patientRegistrationBean.patient.cinfo.addressNextOfKin}" id="addnokConfirm" styleClass="confirm" />
+                                        <h:outputText value="#{pr.nextofkin} #{pr.Phonenumber}"   />
+                                        <h:outputText value="#{patientRegistrationBean.patient.cinfo.numNextOfKin}" id="nokpConfirm" styleClass="confirm" />
+
+                                    </p:panelGrid>
+
+                                </p:panelGrid>
+                                <p:panelGrid columns="2" >
+                                    <p:commandButton  value="#{pr.save}" actionListener="#{patientRegistrationBean.savePatient}" update="#{p:component('personalInformationPanel')} #{p:component('contactInfoPanel')} #{p:component('confirmPanel')}"  oncomplete="ptregdlg.hide()"/>
+                                    <p:commandButton value="#{pr.save} #{pr.an} #{pr.open} " update=":#{p:component('PatientsTable')}  #{p:component('personalInformationPanel')} #{p:component('contactInfoPanel')}"  actionListener="#{medicalRecordManagerBean.saveAndOpenPatient}" oncomplete="ptregdlg.hide()" />
+                                </p:panelGrid>
+                            </p:panel>
+
+                        </p:tab>
+                    </p:wizard>
+                    <pe:keyFilter for="nameEntry" regEx="/[a-z-]/i" />
+                    <pe:keyFilter for="surnameEntry" regEx="/[a-z-]/i" />
+                    <pe:keyFilter for="middleNameEntry" regEx="/[a-z-]/i" />
+                     
+
+
+                </h:form>
+            </p:dialog>
+        </ui:composition>
+    </h:body>
+</html>
+

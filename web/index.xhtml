@@ -1,0 +1,484 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:px="http://primefaces.org/ui/extensions">
+
+
+    
+
+    <h:head>
+        <title>UserName</title>
+
+        <h:outputScript library="scripts" name="script.js" />
+        <h:outputScript library="scripts" name="jquery-layout.js" />
+        
+        <h:outputScript name="slidr.min.js" library="scripts"  />
+         
+        <script>
+            var month_select_overlay_target_Id ;
+            var appViewerSlider ;
+            $(document).ready(function() {
+                var Layout = $('body').layout({applyDefaultStyles: true,
+                    north__resizable: false});
+                Layout.addPinBtn("#westCollapser", "west");
+                Layout.addPinBtn("#eastCollapser", "east");
+                
+                
+                
+                
+            function initSlidr(){
+                
+                appViewerSlider = slidr.create("slidr_appointment",{controls: 'none',
+                    timing : {'cube': '0.5s ease-in'}});
+                appViewerSlider.start();
+              
+            }
+             
+            function appointmentViewerSlider(){
+                appviewerSlider.slide('appointment_Display');
+               
+            }
+            function scheduleAppointmentHandler(xhr,status,args){
+                
+                if(args.WrongSelection){
+                    dlgSchAppoint.close();
+                    schAppErrorDialog.show();
+                }
+                else{
+                    dlgSchAppoint.close();
+                }
+            }
+            function departmentselectHandler(xhr,status,args){
+                
+                if(!args.selectionError){
+                    deptDlg.close();
+                }
+                else{
+                    deptErrorDlg.show();
+                }
+                if(args.appDiscrepancy){
+                    deptErrorDlg.show();
+                }
+            }
+            
+             
+            function al() {
+                alert("Called");
+               
+            }
+            
+            function departmentRequestButtonClickedHandlerAppView(xhr,status,args){
+               
+                deptDlgAV.show();
+            }
+                        
+            function departmentSelectHandlerAppView(xhr,status,args){
+                if(!args.selectionError){
+                    deptDlgAV.close() ;
+                    appViewfs.toggle();
+                }
+                else{
+                    deptErrorDlgAppView.show();
+                }
+            }
+            
+            function scheduleAppointmentRequestHandler(){
+                // var numSelectedRows = openPatientsTable.getSelectedRowsCount() ;
+                // if(numSelectedRows !=  1){
+                //   scheduleAppointmentSelectSinglePatient.show() ;
+                // return ;
+                //}
+                dlgSchAppoint.show() ;
+            }
+
+        
+       
+        </script>
+
+        <h:outputStylesheet library="css" name="default.css" />
+        <h:outputStylesheet library="css" name="syntaxhighlighter.css"/>
+
+        <style type="text/css">
+            #selectable-mpit .ui-selecting-mpit { background: #d3d3d3; }
+            #selectable-mpit .ui-selected-mpit { background: #29bae9; color: white; }
+            #selectable-mpit { list-style-type: none; margin: 0; padding: 0; width: 250px; }
+            #selectable-mpit li { margin: 0px; padding: 1px; float: left; width: 50px; height: 30px; font-size: 1em; text-align: center; }
+            
+            .confirm{
+                font-weight: bold;
+
+            }
+            .confirm-font{
+                font-size: 12px ;
+            }
+            .ui-panelgrid td{
+
+                border-width: 0px ;
+                border-style: none;
+                padding: 2px ;
+            }
+            .ui-panelgrid{
+                border-collapse: separate ;
+            }
+            .ui-layout-north {
+                z-index:20 !important;
+                overflow:visible !important;
+            }
+
+            .ui-layout-north .ui-layout-unit-content {
+                overflow:visible !important;
+            }
+            #westCollapser{
+
+                position: relative ;
+                top: 0px ;
+                left: 168px ;
+            }
+            .noPadding{
+                padding: 0px !important ;
+            }
+
+            #eastCollapser{
+                position: relative ;
+                top:  0px;
+                right: 0px;
+            }
+            .globalFilterPanelStyle{
+                position: relative ;
+                right: -100px ;
+            }
+            .ui-accordion-content {
+                padding:0px !important;
+            }
+
+            body #mrmf div .ui-widget-content{
+                padding-top: 0px !important;
+                padding-left: 0px !important ;
+                padding-right: 0px !important;
+                padding-bottom: 0px !important;
+            }
+            .globalFilterPanelStyle{
+                position: relative ;
+                right: -100px ;
+            }
+
+            .openDialogError{
+                color: red ;
+            }
+            .width-complete{
+                width:100% ;
+
+            }
+
+            .facetbg{
+                background-color: e8e8e8 ;
+            }
+            
+             .centered{
+             margin-left: auto ;
+             margin-right: auto ;
+             
+         }
+          
+        </style>
+    </h:head>
+    <h:body>
+        <h:form id="mrmf">
+            <div class="ui-layout-center noPadding"  id="centerLayout" >
+
+                <p:tabView   id="mainTabView" orientation="bottom"    >
+                    <f:event type="preRenderComponent" listener="#{medicalRecordManagerBean.initDepartmentResource()}" />
+                    <p:ajax event="tabChange" listener="#{medicalRecordManagerBean.mainTabChangedListener}" />
+                    <p:tab  title="#{mrmp.patients}" id="patientTab"     >
+                        <p:dataTable id="PatientsTable" styleClass="noPadding"  var="px" rowKey="#{px.id.ID}" value="#{medicalRecordManagerBean.openedPatients}"  emptyMessage="#{medicalRecordManagerBean.emessage}" 
+                                     paginator="true" widgetVar="openPatientsTable" rows="10" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                     rowsPerPageTemplate="5,10,15"    selection="#{medicalRecordManagerBean.selectedPatients}" >
+                            <f:facet name="header">
+                                #{mrmp.active} #{mrmp.patients}
+                                <p:outputPanel styleClass="globalFilterPanelStyle">
+                                    <h:outputText value="#{mrmp.search} #{mrmp.open} #{mrmp.record}#{mrmp.s}:" />
+                                    <p:inputText id="globalFilter" onkeyup="openPatientsTable.filter()" />
+
+                                </p:outputPanel>
+
+                            </f:facet>
+                            <p:column selectionMode="multiple" style="width:12px" />  
+                            <p:column  headerText="#{mrmp.status}" footerText="#{mrmp.status}" >
+                                <p:graphicImage library="images" name="open_px.png" />
+                            </p:column>
+                            <p:column id="PatientIDColumn" headerText="#{mrmp.patient} #{mrmp.id}" footerText="#{mrmp.patient} #{mrmp.id}">
+
+                                <h:outputText value="#{px.id.ID}"/>
+
+                            </p:column>
+
+                            <p:column id="PatientNameColumn" headerText="#{mrmp.name}" footerText="#{mrmp.name}">
+                                <h:outputLabel value="#{px.name}" />
+                            </p:column>
+
+                            <p:column id="SurnameNameColumn" headerText="#{mrmp.surname}" footerText="#{mrmp.surname}" >
+                                <h:outputText value="#{px.surname}" />
+                            </p:column>
+
+                            <p:column id="MiddleNameColumn" headerText="#{mrmp.middleName}" footerText="#{mrmp.middleName}" >
+                                <h:outputText value="#{px.middleName}" />
+                            </p:column>
+
+                            <p:column id="dateOfBirthColumn" headerText="#{mrmp.age}" footerText="#{mrmp.age}" >
+                                <h:outputText value="#{px.age}">
+
+                                </h:outputText>
+                            </p:column> 
+                            <p:column id="sexColumn" headerText="#{mrmp.sex}" footerText="#{mrmp.sex}" >
+                                <h:outputText value="#{px.pinfo.sex}" />
+                            </p:column>
+                            <p:column >
+                                <p:commandButton title="#{mrmp.view}" icon="ui-icon-search" >
+                                    <f:setPropertyActionListener value="#{px}" target="#{medicalRecordManagerBean.targetSelection}"/>
+                                </p:commandButton>
+                            </p:column>
+
+                            <f:facet name="footer">
+                                #{mrmp.active} #{mrmp.patients}
+                            </f:facet>
+                        </p:dataTable>
+
+
+
+                    </p:tab>
+
+                    <p:tab title="#{mrmp.appointments}" >
+                        <p:dataTable id="appointmentsTable"  var="pxa"  rowKey="#{pxa.id.ID}" value="#{medicalRecordManagerBean.openedPatientsAppointment}"  emptyMessage="#{medicalRecordManagerBean.emessage}" 
+                                     paginator="true" widgetVar="openPatientsTable" rows="10" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                                     rowsPerPageTemplate="5,10,15" selectionMode="multiple"  selection="#{medicalRecordManagerBean.appointmentSelectedPatients}" >
+                            <f:facet name="header">
+                                #{mrmp.patients} #{mrmp.on} #{mrmp.appointment}
+                                <p:outputPanel styleClass="globalFilterPanelStyle">
+                                    <h:outputText value="#{mrmp.search} #{mrmp.open} #{mrmp.record}#{mrmp.s}:" />
+                                    <p:inputText id="globalFilterApp" onkeyup="openPatientsTable.filter()" />
+
+                                </p:outputPanel>
+
+                            </f:facet>
+                            <p:column selectionMode="multiple" style="width:12px" />  
+                            <p:column  headerText="#{mrmp.status}" footerText="#{mrmp.status}" >
+                                <p:graphicImage library="images" name="patient_blue.png" />
+                            </p:column>
+                            <p:column id="PatientIDColumnApp" headerText="#{mrmp.patient} #{mrmp.id}" footerText="#{mrmp.patient} #{mrmp.id}">
+
+                                <h:outputText value="#{pxa.id.ID}"/>
+
+                            </p:column>
+
+                            <p:column id="PatientNameColumnApp" headerText="#{mrmp.name}" footerText="#{mrmp.name}">
+                                <h:outputLabel value="#{pxa.name}" />
+                            </p:column>
+
+                            <p:column id="SurnameNameColumnApp" headerText="#{mrmp.surname}" footerText="#{mrmp.surname}" >
+                                <h:outputText value="#{pxa.surname}" />
+                            </p:column>
+
+                            <p:column id="MiddleNameColumnApp" headerText="#{mrmp.middleName}" footerText="#{mrmp.middleName}" >
+                                <h:outputText value="#{pxa.middleName}" />
+                            </p:column>
+
+                            <p:column id="dateOfBirthColumnApp" headerText="#{mrmp.date} #{mrmp.of} #{mrmp.birth}" >
+                                <h:outputText value="#{pxa.age}">
+
+                                </h:outputText>
+                            </p:column> 
+                            <p:column id="sexColumnApp" headerText="#{mrmp.sex}" footerText="#{mrmp.sex}" >
+                                <h:outputText value="#{pxa.pinfo.sex}" />
+                            </p:column>
+                            <p:column >
+                                <p:commandButton title="#{mrmp.view}" icon="ui-icon-search" >
+                                    <f:setPropertyActionListener value="#{pxa}" target="#{medicalRecordManagerBean.targetSelection}"/>
+                                </p:commandButton>
+                            </p:column>
+
+                            <f:facet name="footer">
+                                #{mrmp.active} #{mrmp.patients}
+                            </f:facet>
+                        </p:dataTable>
+
+                    </p:tab>
+                </p:tabView>
+
+            </div>
+            <div class="ui-layout-north noPadding" >
+
+                <p:menubar autoDisplay="false" id="MenuBar">
+                    <p:submenu label="#{mrmp.file}" icon="ui-icon-document" >
+                        <p:menuitem value="#{mrmp.new} #{mrmp.patient}" onclick="ptregdlg.show()"   />
+                        <p:menuitem value="#{mrmp.open} #{mrmp.patient}" onclick="dlgOpen.show()" />
+                        <p:menuitem value="#{mrmp.appointments} #{mrmp.viewer}"  onclick="appViewerDialog.show()"/>
+                        <p:menuitem value="#{mrmp.clinic} #{mrmp.appointments}"/>
+                        <p:menuitem value="#{mrmp.department}#{mrmp.s}" />
+                        <p:menuitem value="#{mrmp.discharge}" />
+                        <p:menuitem value="#{mrmp.admission}" />
+                        <p:menuitem value="#{mrmp.search}" onclick="searchDlg.show()" />
+                        <p:menuitem value="#{mrmp.exit}" />
+                    </p:submenu>
+
+
+                    <p:submenu label="#{mrmp.edit}" icon="ui-icon-pencil">
+                        <p:menuitem value="#{mrmp.update} " />
+                        <p:menuitem value="#{mrmp.edit} #{mrmp.appointment}" />
+
+                    </p:submenu>
+
+                    <p:submenu label="#{mrmp.patient}" icon="ui-icon-document" >
+                        <p:menuitem value="#{mrmp.update}"  />
+                        <p:menuitem value="#{mrmp.schedule} #{mrmp.appointment}" id="scheduleApptMenuItem"  actionListener="#{appScheduleBean.schedule_ScheduleAppointmentDialogRequestedListener}"   > 
+                            <f:param name="schAppMIID" value="#{p:component('scheduleApptMenuItem')}" /> 
+                        </p:menuitem>
+                        <p:menuitem actionListener="" value="#{mrmp.register} #{mrmp.birth}"  />
+                        <p:menuitem value="#{mrmp.admit}" id="admitMenuItem" actionListener="#{medicalRecordManagerBean.admission_AdmitDialogRequestListener}" />
+                        <p:menuitem value="#{mrmp.discharges}" />
+                        <p:menuitem value="#{mrmp.history}"  />
+                        <p:menuitem value="#{mrmp.timeline}" />
+                    </p:submenu>
+
+                    <p:submenu label="#{mrmp.nhis}"  >
+
+                    </p:submenu>
+                    <p:submenu label="#{mrmp.mail}" icon="ui-icon-email" >
+                        <p:menuitem value="#{mrmp.send}" />
+                        <p:menuitem value="#{mrmp.record} #{mrmp.request}" />
+                        <p:menuitem value="#{mrmp.referral}" />
+                        <p:menuitem value="#{mrmp.mail} #{mrmp.patient}" />
+
+                    </p:submenu>
+                    <p:submenu label="#{mrmp.help}" icon="ui-icon-help">
+                        <p:menuitem value="#{mrmp.help}"/>
+                        <p:menuitem value="#{mrmp.visit} #{mrmp.oursite}" />
+                        <p:menuitem value="#{mrmp.about}" />
+
+                    </p:submenu>
+                </p:menubar>
+                <p:toolbar id="MedicalRecordManagerToolBar" >
+                    <p:toolbarGroup  >
+                        <p:commandButton type="button"  value="#{mrmp.new} #{mrmp.patient}" icon="ui-icon-document" onclick="ptregdlg.show()" />
+                        <p:separator/>
+                        <p:commandButton   value="#{mrmp.open} #{mrmp.patient}" type="button" icon="ui-icon-folder-open" onclick="dlgOpen.show()" />
+                        <p:separator/>
+                        <p:commandButton  type="button" value="#{mrmp.search}" icon="ui-icon-search" onclick="searchDlg.show()" />
+                        <p:separator/>
+                        <p:commandButton type="button" value="#{mrmp.appointments}" icon="" />
+                        <p:separator/>
+                        <p:commandButton type="button" icon="" value="#{mrmp.show} #{mrmp.history}" />
+                        <p:separator />
+                        <p:commandButton  process="@this,mainTabView"  icon=""  value="#{mrmp.schedule} #{mrmp.appointments}"   actionListener="#{medicalRecordManagerBean.scheduleAppointment_ScheduleAppointmentsDialogRequestedListener}"  >
+
+                        </p:commandButton>
+                        <p:commandButton icon="ui-icon-calculator" actionListener="" id="clinicAppointmentEnQueueApp" value="#{mrmp.enqueue} #{mrmp.appointment}" 
+                    </p:toolbarGroup>
+                    <p:toolbarGroup align="right">
+                        <p:inputText value="Patient ID" styleClass="inTextControlled"   ></p:inputText>
+                        <p:commandButton value="#{mrmp.open} #{mrmp.patient}" />
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+
+
+            </div>
+            <div class="ui-layout-south">South</div>
+            <div class="ui-layout-east noPadding" >
+                <div class="ui-layout-unit-header ui-widget-header ui-corner-all " >
+                    <button aria-disabled="false" role="button"  id="eastCollapser" type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" >
+                        <span class="ui-button-icon-left ui-icon ui-icon-triangle-1-e">  
+                        </span>
+                        <span class="ui-button-text">ui-button</span>
+                    </button>
+
+
+                </div>
+                <p:accordionPanel id="searchPanel" activeIndex="-1" >
+                    <p:tab title="#{mrmp.search}" >
+                        <p:panel header="#{mrmp.search} #{mrmp.by} #{mrmp.name}" >
+                            <p:inputText value="Search" />
+                            <p:commandButton value="#{mrmp.search}" />
+                        </p:panel>
+                    </p:tab>
+                </p:accordionPanel>
+
+            </div>
+
+            <div class="ui-layout-west noPadding">
+                <div class="ui-layout-unit-header ui-widget-header ui-corner-all " >
+                    <button aria-disabled="false" role="button"  id="westCollapser" type="button" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" >
+                        <span class="ui-button-icon-left ui-icon ui-icon-triangle-1-w">  
+                        </span>
+                        <span class="ui-button-text">ui-button</span>
+                    </button>
+                </div> 
+
+                <p:accordionPanel activeIndex="-1" >
+                    <p:tab title="#{mrmp.doctors}" >
+                        <p:dataList value="" var="" id="doctorsList"  
+                                    paginator="true" rows="5"   
+                                    paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"  
+                                    rowsPerPageTemplate="5,10" type="none" >  
+
+                            <f:facet name="header">  
+                                #{mrmp.doctors}
+                            </f:facet>  
+
+                            <p:commandButton  icon="ui-icon-search" update="" oncomplete="" title="View Detail">  
+                                <f:setPropertyActionListener value="" target="" />  
+                            </p:commandButton>  
+
+                            <h:outputText value="" style="margin-left:10px" />  
+                            <br />  
+                        </p:dataList>  
+                    </p:tab>
+                    <p:tab title="#{mrmp.nurses}" >
+                        <p:dataList value="" var="" id="nursesList"  
+                                    paginator="true" rows="5"  
+                                    paginatorTemplate="{PreviousPageLink} {CurrentPageReport} {NextPageLink}"  
+                                    rowsPerPageTemplate="5,10" type="none">  
+
+                            <f:facet name="header">  
+                                #{mrmp.nurses}
+                            </f:facet>  
+
+                            <p:commandButton icon="ui-icon-search" update="" oncomplete="" title="View Detail" actionListener="#{a}">  
+                                <f:setPropertyActionListener value="" target="" />  
+                            </p:commandButton>  
+
+                            <h:outputText value="" style="margin-left:10px" />  
+                            <br />  
+                        </p:dataList>  
+                    </p:tab>
+                </p:accordionPanel>
+
+
+            </div>
+
+            <ui:include src="./resources/includes/monthSelect.xhtml" />
+        </h:form>
+        <ui:include src="./resources/includes/ptRegistration.xhtml" />
+
+
+        <ui:include src="./resources/includes/openPatient.xhtml"  />
+
+        <ui:include src="./resources/includes/search.xhtml"  />
+
+        <ui:include src="./resources/includes/dialogs.xhtml"  />
+
+        <ui:include src="./resources/includes/details.xhtml"  />
+
+        <ui:include src="./resources/includes/clinicAppointments_edit.xhtml" />
+
+        <ui:include src="./resources/includes/appointmentViewer.xhtml"  />
+
+        
+    </h:body>
+
+</html>
+
+

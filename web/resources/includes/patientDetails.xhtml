@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Patient Details</title>
+    </h:head>
+    <h:body>
+        <p:dialog widgetVar="ptDetailsDlg" closable="true" modal="true" >
+            <p:panelGrid columns="2" >
+                <p:graphicImage library="images" name="patient_blue.png" />
+                <h:outputText value="#{medicalRecordManagerBean.targetSelection.name} #{medicalRecordManagerBean.targetSelection.surname}" />
+            </p:panelGrid>
+            <p:panelGrid  columns="4" >
+                <p:outputLabel for="detailHospitalNum" value="#{mrmp.hospital} #{mrmp.number}" />
+                <h:outputText id="detailHospitalNum" value="#{medicalRecordManagerBean.targetSelection.id.ID}"/>
+                
+                <p:outputLabel for="detailName" value="#{mrmp.name}" />
+                <h:outputText id="detailName" value="#{medicalRecordManagerBean.targetSelection.name}"/>
+                
+                <p:outputLabel for="detailSurname" value="#{mrmp.surname}" />
+                <h:outputText id="detailSurname" value="#{medicalRecordManagerBean.targetSelection.surname}"/>
+                
+                <p:outputLabel for="detailMiddleName" value="#{mrmp.middleName}" />
+                <h:outputText id="detailMiddleName" value="#{medicalRecordManagerBean.targetSelection.middleName}"/>
+                
+                <p:outputLabel for="detailAge" value="#{mrmp.age}" />
+                <h:outputText id="detailAge" value="#{medicalRecordManagerBean.targetSelection.age}"/>
+                
+                <p:outputLabel for="detailSex" value="#{mrmp.sex}" />
+                <h:outputText id="detailSex" value="#{medicalRecordManagerBean.targetSelection.pinfo.sex}"/>
+                
+                <p:outputLabel for="detailOccupation" value="#{mrmp.occupation}" />
+                <h:outputText id="detailOccupation" value="#{medicalRecordManagerBean.targetSelection.pinfo.occupation}"/>
+                
+                <p:outputLabel for="detailAddress" value="#{pr.address}" />
+                <h:outputText id="detailAddress" value="#{medicalRecordManagerBean.targetSelection.cinfo.address}"/>
+                
+                <p:outputLabel for="detailPhoneNum" value="#{pr.Phonenumber}" />
+                <h:outputText id="detailPhoneNum" value="#{medicalRecordManagerBean.targetSelection.cinfo.phoneNumber}"/>
+                
+                <p:outputLabel for="detailState" value="#{pr.state}" />
+                <h:outputText id="detailState" value="#{medicalRecordManagerBean.targetSelection.pinfo.stateOfOrigin}"/>
+                
+                <p:outputLabel for="detaillocalGov" value="#{pr.localgovernment}" />
+                <h:outputText id="detailLocGov" value="#{medicalRecordManagerBean.targetSelection.pinfo.localGovArea}"/>
+                
+                <p:spacer width="5" />
+                <p:spacer width="5" />
+                <p:commandButton value="#{mrmp.ok}" />
+                <p:spacer width="5" />
+                
+            </p:panelGrid>
+        </p:dialog>
+    </h:body>
+</html>
+

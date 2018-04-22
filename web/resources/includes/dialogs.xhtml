@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    
+    
+    <h:body style="">
+        <ui:composition>
+            <p:confirmDialog widgetVar="multipleBirthConfirmDialog" closable="false" message="#{mrmp.recentBirthRegistration}" severity="info" >
+                <p:commandButton value="#{mrmp.ok}" onclick="multipleBirthConfirmDialog.hide()" >
+                    <f:param value="BRBCID" name="cid" />  
+                    
+                </p:commandButton>
+                
+                 
+                
+            </p:confirmDialog>
+            
+            <p:confirmDialog widgetVar="updaeAppConfirmDlg" message="#{mrmp.appointment} #{mrmp.updated} #{mrmp.successfully}"   severity="info" closable="false" header="#{mrmp.update} #{mrmp.successful}" >
+                <p:commandButton value="#{mrmp.ok}" icon="ui-icon-close" onclick="updaeAppConfirmDlg.hide()" oncomplete="ptAppEditDlg.hide()" />
+            </p:confirmDialog>
+            
+            <p:confirmDialog widgetVar="updaeAppErrorDlg" message="#{mrmp.errorUpdatApp}"  closable="false" header="#{mrmp.update} #{mrmp.error}" >
+                <p:commandButton value="#{mrmp.ok}" icon="ui-icon-close" onclick="updaeAppErrorDlg.hide()" oncomplete="ptAppEditDlg.hide()" />
+            </p:confirmDialog>
+            
+            <p:confirmDialog widgetVar="notFemaleErrorDialog" message="#{mrmp.birthOnlyFemales}"  severity="info" >
+                <p:commandButton onclick="notFemaleErrorDialog.hide()" value="#{mrmp.ok}" />
+            </p:confirmDialog> 
+            <p:confirmDialog widgetVar="noBirthsDlg" message="#{mrmp.nobirths}" severity="info" >
+                <p:commandButton value="#{mrmp.ok}" onclick="noBirthsDlg.hide()"  />
+            </p:confirmDialog>
+            
+            <p:confirmDialog widgetVar="noAppConfirmDlg" message="#{mrmp.noapp}" severity="info" closable="true"  >
+                <p:commandButton value="#{mrmp.ok}" onclick="noAppConfirmDlg.hide()" />
+            </p:confirmDialog>
+            <p:confirmDialog  closable="false" widgetVar="birthRegUnSuccessfulDlg" message="#{mrmp.birth} #{mrmp.no} #{mrmp.registered}" severity="info" >
+                <p:commandButton value="#{mrmp.ok}" oncomplete="birthRegUnSuccessfulDlg.hide()" onclick="birthRegDlg.hide()" process="@this" />
+
+            </p:confirmDialog>
+            <p:confirmDialog closable="false" message="#{mrmp.birth} #{mrmp.birthregsuccess}" widgetVar="birthRegSuccessDlg" >
+                <p:commandButton value="#{mrmp.ok}" oncomplete="birthRegSuccessDlg.hide()" onclick="birthRegDlg.hide()" process="@this"  />
+            </p:confirmDialog>
+            <p:confirmDialog widgetVar="notOnAdmission" message="#{mrmp.notOnAdmission}" severity="info" closable="true" >
+                <p:commandButton value="#{mrmp.ok}" onclick="notOnAdmission.hide()" />
+            </p:confirmDialog>
+            <p:confirmDialog widgetVar="admSuccessfulDlg" message="#{mrmp.admissionSuccess}" severity="info" closable="true"  >
+                <p:commandButton value="#{mrmp.ok}" onclick="admSuccessfulDlg.hide()" />
+            </p:confirmDialog>
+
+
+            <p:confirmDialog widgetVar="onAdmissionDlg" message="#{mrmp.onAdmission}" severity="info" closable="true"   >
+                <p:commandButton value="#{mrmp.ok}" onclick="onAdmissionDlg.hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog widgetVar="noAdmissionsDlg" message="#{mrmp.noAdms}" severity="info" closable="true"   >
+                <p:commandButton value="#{mrmp.ok}" onclick="noAdmissionsDlg.hide()" />
+            </p:confirmDialog>
+            <p:confirmDialog widgetVar="noAppropFieldsSelected" message="#{mrmp.appropField}" severity="info" closable="true"  >
+                <p:commandButton value="#{mrmp.ok}" onclick="noAppropFieldsSelected.hide()" />
+            </p:confirmDialog>
+            <p:confirmDialog widgetVar="selectSinglePatient" message="#{mrmp.pleaseApproSelection}" severity="info" closable="true"  >
+                <p:commandButton value="#{mrmp.ok}" onclick="selectSinglePatient.hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog closable="true" widgetVar="appNotScheduledConfirnDlg" message="#{mrmp.appnotscheduled}"   >
+                <p:commandButton value="#{mrmp.ok}" onclick="appNotScheduledConfirnDlg.hide()"  >
+
+                    <f:param name="cid" value="SACID" />
+                </p:commandButton>
+            </p:confirmDialog>
+
+            <p:confirmDialog widgetVar="noDeptSelectedConfirmDlg" message="#{mrmp.noDeptSelected}" severity="info" >
+                <p:commandButton value="#{mrmp.ok}" onclick="noDeptSelectedConfirmDlg.hide()" />
+            </p:confirmDialog>
+
+
+            <p:confirmDialog closable="false"  widgetVar="wrongDeptConfirmDlg" message="#{mrmp.wrongDeptNodeSelection}" severity="info" >
+                <p:commandButton value="#{mrmp.ok}" onclick="wrongDeptConfirmDlg.hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog closable="false"  widgetVar="noDateSelectedConfirmDlg" message="#{mrmp.dateSelectError}" severity="info" >
+                <p:commandButton value="#{mrmp.ok}" onclick="noDateSelectedConfirmDlg.hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog closable="false"  widgetVar="appDicreConfirmDlg" message="#{mrmp.appdiscrepancy}" severity="info" >
+                <p:commandButton value="#{mrmp.ok}"  onclick="appDicreConfirmDlg.hide()"/>
+            </p:confirmDialog>
+
+            <p:confirmDialog  closable="false" widgetVar="appScheduleConfirmDlg" message="#{mrmp.appScheduled}" severity="info" >
+                <p:commandButton value="#{mrmp.ok}" onclick="appScheduleConfirmDlg.hide()"   >
+
+                </p:commandButton>
+            </p:confirmDialog>
+
+            <p:confirmDialog closable="true" widgetVar="noMatchSearch" message="#{mrmp.noMatch}" severity="info"  header="#{mrmp.noMatch}" >
+                <p:commandButton value="#{mrmp.ok}" onclick="noMatchSearch.hide()" />
+            </p:confirmDialog>
+
+            <p:confirmDialog  closable="false" widgetVar="cannotOPenPatientDlg" message="#{mrmp.canOpenPatient}" severity="info" >
+                <p:commandButton value="#{mrmp.ok}" onclick="cannotOPenPatientDlg.close()" />
+            </p:confirmDialog>
+            
+            
+            <p:confirmDialog closable="true" height="#{mrmp.noAdmSelected}" widgetVar="noAdmSelectedDlg" severity="info" >
+                <p:commandButton value="#{mrmp.ok}" onclick="noAdmSelectedDlg.hide()"  />
+            </p:confirmDialog>
+            
+            <p:confirmDialog closable="true" message="#{mrmp.taskPatientTab}" widgetVar="patientTabOnly" severity="info" >
+                <p:commandButton value="#{mrmp.ok}" onclick="patientTabOnly.hide()" type="button" />
+            </p:confirmDialog>
+        </ui:composition>
+    </h:body>
+</html>
+

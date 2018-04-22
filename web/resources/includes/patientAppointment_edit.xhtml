@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:department_composite_component="http://xmlns.jcp.org/jsf/composite/department_composite_component"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Appointment Edit</title>
+    </h:head>
+    <h:body>
+        <h:form id="patientAppEditDialog" >
+            <p:dialog closable="false" dynamic="true" header="#{mrmp.edit} #{mrmp.appointment}" modal="true" id="patientAppointmentEditDialog" widgetVar="ptAppEditDlg" >
+                <p:panel header="#{mrmp.appointments} #{mrmp.edit} #{mrmp.for}- #{mrmp.hospital} #{mrmp.number}:#{patientAppointmentBean.appForEdit.patient.id.ID} - #{mrmp.name}:#{patientAppointmentBean.appForEdit.patient.name} #{patientAppointmentBean.appForEdit.patient.surname} #{patientAppointmentBean.appForEdit.patient.age} #{patientAppointmentBean.appForEdit.patient.pinfo.sex}" >
+                    <div class="row">
+                        <div class="column small-12">
+                            <p:message for="deptSelectButtonPtAppEdit" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column small-4">
+                            <h:outputText value="#{mrmp.prev } #{mrmp.appointment} -" />
+                        </div>
+                        <div class="column small-4">
+                            <h:outputText value="#{mrmp.unit} - #{patientAppointmentBean.appForEdit.department} #{patientAppointmentBean.appForEdit.unit}" /> 
+                        </div>
+                        <div class="column small-4">
+                            <h:outputText value="#{mrmp.date} - #{patientAppointmentBean.appForEdit.dateOfAppointment}" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column smali-3">
+                            <h:outputText value="#{mrmp.unit}" />
+                        </div>
+                        <div class="column smali-3">
+                            <h:outputText value="#{patientAppointmentBean.selectedDepartment_Edit} #{patientAppointmentBean.selectedUnit_Edit}" id="patientAppDeptOutputText_Edit" />
+                        </div>
+                        <div class="column smali-3">
+                            <h:outputText value="#{mrmp.clinic}" />
+                        </div>
+                        <div class="column smali-3">
+                            <h:outputText value="#{patientAppointmentBean.selectedClinic_Edit}"  id="patientAppClinicOutputText_Edit" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="column smali-3">
+                            <h:outputText value="#{mrmp.date} #{mrmp.of} #{mrmp.appointment}" />
+                        </div>
+                        <div class="column smali-3">
+                            <p:calendar value="#{patientAppointmentBean.selectedDate_Edit}" readonlyInput="true" required="true" pattern="EEE, d MMM yyyy"  id="patientAppointmentDateSelectEdit" yearRange="c-1:c+1" >
+                                
+                            </p:calendar>
+                        </div>
+                        <div class="column smali-3">
+
+                        </div>
+                        <div class="column smali-3">
+                            <p:commandButton  icon="ui-icon-search" id="deptSelectButtonPtAppEdit" value="#{mrmp.select} #{mrmp.department}"   />
+                        </div>
+                    </div>           
+
+                    <div class="row">
+                        <div class="column small-9">
+                            
+                        </div>
+                        <div class="3">
+                            <p:commandButton  disabled="#{patientAppointmentBean.updateButtonEnabled}"   value="#{mrmp.update} #{mrmp.appointment}" actionListener="#{patientAppointmentBean.patientientAppointments_PatientAppointmentUpdateAppointment()}" process="@this" icon="ui-icon-search" id="patientAppointmentUpdateAppButtonEdit" >
+                                <f:param name="cid" value="PACID" />
+                            </p:commandButton>
+                        </div>
+                    </div>
+                </p:panel>
+            </p:dialog>
+
+
+            <department_composite_component:department_select_cc  departmentSelectTarget="#{p:component('deptSelectButtonPtAppEdit')}" departmentsRootTreeNode="#{medicalRecordManagerBean.departmentRoot}" deptSelectEventListener="#{patientAppointmentBean.patientAppointment_PatientAppointmentDepartmentNodeSelectListener_Edit}" selectedDepartmentTreeNode="#{patientAppointmentBean.selectedNode_Edit}" deptSelectComponentsForUpdate="#{p:component('patientAppClinicOutputText_Edit')}, #{p:component('patientAppDeptOutputText_Edit')}" />
+        </h:form>
+    </h:body>
+</html>
+

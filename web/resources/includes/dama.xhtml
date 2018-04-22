@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>DAMA</title>
+    </h:head>
+    <h:body>
+        <p:dialog id="damadialog" widgetVar="damaDlg" modal="true" resizable="false" dynamic="true" closable="true" >
+            <h:form id="damaForm" >
+                <div class="panel-bs-2 panel-info">
+                    <div class="panel-heading grey">
+                        <h3 class="panel-title text-center">#{mrmp.dama} - #{admissionsBean.admissionForOutcome.patient_Adm.name} #{admissionsBean.admissionForOutcome.patient_Adm.surname}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="small-12 columns">
+                                <p:message  for="damButtonDama" showSummary="true" />
+                                <p:message for="damaDateCalendar" />
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="small-3 columns"><h:outputText value="#{mrmp.age}"/></div>
+                            <div class="small-3 columns"><h:outputText value="#{admissionsBean.admissionForOutcome.patient_Adm.age}" /></div>
+                            <div class="small-3 columns"><h:outputText value="#{mrmp.sex}" /></div>
+                            <div class="small-3 columns"><h:outputText value="#{admissionsBean.admissionForOutcome.patient_Adm.pinfo.sex}" /></div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="columns small-3 "></div>
+                        <div class="columns small6"><p:calendar value="#{admissionsBean.outcomeDate}" id="damaDateCalendar" required="true" /></div>
+                        <div class="columns small-3"> </div>
+                    </div>
+                    <div class="row">
+                        <div class="small-6"></div>
+                        <div class="small-3 columns" >
+                            <p:commandButton oncomplete="damaDlg.hide()" update="@this" icon="ui-icon-arrow-4" value="#{mrmp.dama}" id="damaButtonDama" actionListener="#{admissionsBean.dama_DamaButtonClickedListener()}" process="@this,damaDateCalendar" >
+                                <f:param name="DAMABID" value="#{p:component('damaButtonDama')}"  />
+                            </p:commandButton>
+                        </div>
+                        <div class="small-3 columns">
+                            <p:commandButton icon="ui-icon-close" value="#{mrmp.dama}" id="damaCloseButton"  oncomplete="damaDlg.hide()"  actionListener="#{admissionsBean.dama_DamaCloseButtonListener()}"/>
+                        </div>
+                    </div>
+                    <div class="panel-footer grey">
+
+                    </div>
+                </div>
+
+            </h:form>
+        </p:dialog>
+
+    </h:body>
+</html>
+

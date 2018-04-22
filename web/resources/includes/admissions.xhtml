@@ -1,0 +1,182 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>
+
+
+        </title>
+    </h:head>
+    <h:body style="">
+        <p:dialog closable="false" widgetVar="admsDlg" id="admissionDialog" dynamic="true" height="500" header="#{mrmp.admission}" maximizable="false" modal="true" width="450" >
+            <p:ajax event="close" listener="#{admissionsBean.admissions_AdmissionsCloseEventListener}" />
+            <h:form>
+                <p:panelGrid  id="admissionPanelGrid">
+                    <f:event type="preRenderComponent" listener="#{admissionsBean.initConversation()}" />
+                    <f:facet name="header">
+                        #{mrmp.admission}
+                    </f:facet>
+                    <p:fieldset toggleable="true"  id="admissionFieldSet"  collapsed="#{admissionsBean.fieldSetCollapsed}"   legend="#{mrmp.select} #{mrmp.date}" >
+
+                        <p:calendar mode="inline" id="admissionsCalendar" pages="2"  value="#{admissionsBean.admissionDate}" selectOtherMonths="true" navigator="true" showOtherMonths="true" >
+
+                        </p:calendar>
+                    </p:fieldset>
+                    <p:panel     >
+                        <div class="rows">
+                            <div class="columns small-4 text-center">
+                                <p:selectBooleanCheckbox      id="admissionSelectCBOX" value="#{admissionsBean.useRangeChecked}" itemLabel="#{mrmp.select} #{mrmp.date} #{mrmp.range}" >
+                                    <p:ajax   oncomplete="useNameCheckedRemoteCommand()" />
+                                </p:selectBooleanCheckbox>
+
+                            </div>
+                            <div class="columns small-4 text-center">
+                                <p:calendar mode="popup"  id="admissionsCalendarStart" value="#{admissionsBean.admissionDate_Start}"  label="#{mrmp.start}" title="#{mrmp.both} #{mrmp.start} #{mrmp.andy} #{mrmp.end} #{mrmp.days} #{mrmp.inclusive}" pattern="EEE, dd MMM, yyyy" navigator="true" showOtherMonths="true"  selectOtherMonths="true" showButtonPanel="true" showWeek="true" />
+                            </div>
+                            <div class="columns small-4 text-center">
+                                <p:calendar mode="popup" id="admissionsCalendarEnd" value="#{admissionsBean.admissionDate_End}" label="#{mrmp.end}" pattern="EEE, dd MMM, yyyy" title="#{mrmp.both} #{mrmp.start} #{mrmp.andy} #{mrmp.end} #{mrmp.days} #{mrmp.inclusive}" navigator="true" showOtherMonths="true"  selectOtherMonths="true" showButtonPanel="true" showWeek="true" />
+                            </div>
+                        </div>                                                
+                    </p:panel>
+                </p:panelGrid>
+
+                <div class="rows">
+                    <div class="columns small-9">
+
+                    </div>
+
+                    <div class="columns small-3">
+                        <p:commandButton actionListener="#{admissionsBean.admissions_AdmissionLoadAdmissions}" process="@this,admissionPanelGrid"   icon="ui-icon-disk" update="admissionsTable,admissionFieldSet,admissionSelectCBOX" >
+
+                            <f:param name="cid" value="ADMSCID" />
+                        </p:commandButton>
+                    </div>
+                </div>
+                <p:dataTable id="admissionsTable" styleClass="noPadding"  var="adms"  value="#{admissionsBean.admissions}"  emptyMessage="#{mrmp.noAdms}" 
+                             paginator="true" widgetVar="admsTable" rows="10" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"  
+                             rowsPerPageTemplate="5,10,15" selectionMode="single"  selection="#{admissionsBean.admissionForOutcome}" >
+                    <f:facet name="header">
+                        #{mrmp.admission}
+
+
+                    </f:facet>
+
+                    <p:column headerText="#{mrmp.name}" filterBy="#{adms.patient_Adm.name}" >
+                        <h:outputText value="#{adms.patient_Adm.name}" />
+                    </p:column>
+
+                    <p:column headerText="#{mrmp.surname}"  filterBy="#{adms.patient_Adm.surname}" >
+                        <h:outputText value="#{adms.patient_Adm.surname}"   />
+                    </p:column>
+
+                    <p:column headerText="#{mrmp.age}" >
+                        <h:outputText value="#{adms.patient_Adm.age}" />
+                    </p:column>
+
+                    <p:column headerText="#{mrmp.department}" filterBy="#{adms.department}"  >
+                        <h:outputText value="#{adms.department}" />
+                    </p:column>
+
+                    <p:column headerText="#{mrmp.unit}" filterBy="#{adms.unit}" >
+                        <h:outputText value="#{adms.unit}" />
+                    </p:column>
+
+                    <p:column headerText="#{mrmp.remark}" filterBy="#{adms.remark}" filterMatchMode="exact" filterOptions="#{admissionsBean.filterRemarkOptions}" >
+                        <h:outputText value="#{adms.remark}" />
+                    </p:column>
+                    <p:commandButton title="view" icon="ui-icon-search"  id="admissionDetailsCommandButton" oncomplete="admDetailDlg.show()">
+                        <f:setPropertyActionListener value="#{adms}" target="#{admissionsBean.selectedAdmission}"/>
+                        <f:param name="cid" value="ADMSCID" />
+                    </p:commandButton>
+                    <f:facet name="footer" >
+                        <p:commandButton value="#{mrmp.discharge}" actionListener="#{admissionsBean.admission_AdmissionDischargeDialogRequested()}"  icon="ui-icon-search" id="dischargeButton"    
+                                         process="@this,admissionsTable" >
+                            <f:param name="cid" value="ADMSCID" />
+
+                        </p:commandButton>
+                        <p:commandButton value="#{mrmp.dama}" actionListener="#{admissionsBean.admission_AdmissionDAMADialogRequested()}" icon="" id="damaButton" process="@this,admissionsTable" >
+                            <f:param name="cid" value="ADMSCID" />
+
+                        </p:commandButton>
+                        <p:commandButton value="#{mrmp.register} #{mrmp.death}" actionListener="" process="@this,admissionsTable" icon="ui-icon-search" >
+                            <f:param name="cid" value="ADMSCID" />
+
+                        </p:commandButton>
+                    </f:facet>
+                    <!----- Conversation not yet ended and propagated ----->
+                </p:dataTable>
+
+                <p:remoteCommand   actionListener="#{admissionsBean.admission_AdmissionUseRangeValueChangeListener}" update="admissionFieldSet"  name="useNameCheckedRemoteCommand" process="@this" >
+
+                    <f:param name="cid" value="ADMSCID" />
+                </p:remoteCommand>
+
+            </h:form>
+        </p:dialog>
+
+        <p:dialog closable="true" dynamic="true" widgetVar="admDetailDlg" header="#{mrmp.admissions} #{mrmp.details}" footer="#{mrmp.admissions} #{mrmp.details}" >
+            <h:form>
+                <div class=" panel-bs-2 panel-info" >
+                    <div class="panel-heading grey">
+                        <h3 class="panel-title text-center">#{mrmp.details}</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="rows">
+                            <div class="columns small-3 text-center">#{mrmp.id}</div>
+                            <div class="columns small-3 text-center">#{adms.patient_Adm.id.ID}</div>
+                            <div class="columns small-3 text-center">#{mrmp.date} #{mrmp.of} #{mrmp.admissions}</div>
+                            <div class="columns small-3 text-center">#{adms.admissionDate}</div>
+                        </div>
+
+
+                        <div class="rows">
+                            <div class="columns small-3 text-center">#{mrmp.name}</div>
+                            <div class="columns small-3 text-center">#{adms.patient_Adm.name}</div>
+                            <div class="columns small-3 text-center">#{mrmp.department}</div>
+                            <div class="columns small-3 text-center">#{adms.department}</div>
+                        </div>
+
+
+                        <div class="rows">
+                            <div class="columns small-3 text-center">#{mrmp.surname}</div>
+                            <div class="columns small-3 text-center">#{adms.patient_Adm.surname}</div>
+                            <div class="columns small-3 text-center">#{mrmp.unit}</div>
+                            <div class="columns small-3 text-center">#{adms.unit}</div>
+                        </div>
+
+
+
+                        <div class="rows">
+                            <div class="columns small-3 text-center">#{mrmp.age}</div>
+                            <div class="columns small-3 text-center">#{adms.patient_Adm.age}</div>
+                            <div class="columns small-3 text-center">#{mrmp.remark}</div>
+                            <div class="columns small-3 text-center">#{adms.remark}</div>
+                        </div>
+
+
+
+                        <div class="rows">
+                            <div class="columns small-3 text-center">#{mrmp.sex}</div>
+                            <div class="columns small-3 text-center">#{adms.patient_Adm.pinfo.sex}</div>
+                            <div class="columns small-3 text-center">#{mrmp.admissions} #{mrmp.length}</div>
+                            <div class="columns small-3 text-center">#{adms.lenght} #{mrmp.day}</div>
+                        </div>
+
+                        <div class="panel-footer grey"></div>
+
+                    </div>
+                </div>    
+                <div class="rows">
+                    <div class="columns small-2"></div>
+                    <div class="columns small-10">
+                        <p:commandButton icon="ui-icon-close" value="#{mrmp.close}"   id="admissionDetailCloseButton"  onclick="admDetailDlg.hide" />
+                    </div>
+                </div>
+            </h:form>
+        </p:dialog>
+    </h:body>
+</html>
+

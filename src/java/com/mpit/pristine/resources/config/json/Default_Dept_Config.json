@@ -1,0 +1,74 @@
+{
+  "Name": "Departments",
+  "departments": [
+    {
+      "Name": "Internal Medicine",
+      "Units": [
+        {
+          "HeadOfUnit": "Prof Isezua,Dr Hayatu",
+          "Clinics": [
+            {
+              "DayOfWeek": "Thursday",
+              "Start": "2pm"
+            },
+            {
+              "DayOfWeek": "Tuesday",
+              "Start": "9am"
+            }
+          ],
+          "Name": "Cardiology"
+        },
+        {
+          "HeadOfUnit": "Prof Njoku",
+          "Clinics": [
+            {
+              "DayOfWeek": "Wednesday",
+              "Start": "9am"
+            }
+          ],
+          "Name": "Pulmonology"
+        },
+        {
+          "HeadOfUnit": "Dr Yakubu",
+          "Clinics": [
+            {
+              "DayOfWeek": "Wednesday",
+              "Start": "2pm"
+            }
+          ],
+          "Name": "GastroEnterology"
+        },
+        {
+          "HeadOfUnit": "Dr Liman,Dr Maksudi",
+          "Clinics": [
+            {
+              "DayOfWeek": "Thursday",
+              "Start": "9am"
+            }
+          ],
+          "Name": "Nephrology"
+        },
+        {
+          "HeadOfUnit": "Dr Anas",
+          "Clinics": [
+            {
+              "DayOfWeek": "Monday",
+              "Start": "9am"
+            }
+          ],
+          "Name": "Endocrinology"
+        },
+        {
+          "HeadOfUnit": "Dr Balarabe",
+          "Clinics": [
+            {
+              "DayOfWeek": "Monday",
+              "Start": "9pm"
+            }
+          ],
+          "Name": "Neurology"
+        }
+      ]
+    }
+  ]
+}
